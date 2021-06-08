@@ -1,0 +1,7 @@
+Would you be open to exploring a new opportunity in Gothenburg? If so, I have a position that I'd love to tell you more about...
+
+A client of mine is currently building a brand new, cloud-based security and business platform, for the retailer sector, and are building a team of developers to build everything from scratch.
+
+The platform is being developed in some of the latest tech such as Java 8, Spring-boot, Spring Cloud, Micro-services, React.js, MongoDB and Cassandra. And will offer you the opportunity to play a part in both the architecture and development.
+
+Would you be open to hearing some more about this? I think you look like a really interesting match.

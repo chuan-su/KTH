@@ -1,0 +1,9 @@
+rootProject.name = 'sep'
+include 'common'
+include 'security'
+include 'finance'
+include 'production'
+include 'epr'
+include 'app'
+include 'hr'
+

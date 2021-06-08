@@ -1,0 +1,27 @@
+* Mining Data Streams
+
+** Run the application
+
+#+BEGIN_SRC bash
+$ cd HW3
+$ sbt clean package
+$ ./run.sh -m=58 -alg=impr
+#+END_SRC
+
+*** Program arguments
+
+| arg  | description                     | default |
+| -m   | Reservoir sampling size         | 58      |
+| -alg | TRIEST algorithm (base or impr) | base    |
+
+*** Dataset
+
+http://konect.uni-koblenz.de/networks/ucidata-gama
+
+| Vertex | Edges | Triangles |
+|     16 |    58 |        68 |
+
+http://konect.uni-koblenz.de/networks/moreno_names
+
+| Vertex | Edges  | Triangles |
+|   1773 | 16,401 | 19,966    |

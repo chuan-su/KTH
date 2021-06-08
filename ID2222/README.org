@@ -1,0 +1,32 @@
+* Data Mining
+
+Homework Assignments for course [[https://www.kth.se/student/kurser/kurs/ID2222?l=en][Data Mining (ID2222)]] at KTH.
+
+
+* Content
+
+- HW1: Finding Similar Items: Textually Similar Documents
+- HW2: Discovery of Frequent Itemsets and Association Rules
+- HW3: Mining Data Streams
+
+* Environment Set up
+
+The solutions are implemented in [[https://www.scala-lang.org][Scala Programming Language]] =v2.11.8= as well as [[https://spark.apache.org][Apache Spark]] =v2.3.2= Big Data framework.
+
+The Spark version we are currently using is =2.3.2= and its compatible Scala version is =2.11.x=
+
+It is also required to have [[https://www.scala-sbt.org/1.0/docs/Getting-Started.html][sbt]] installed to build the projects.
+
+** Compile the project
+
+#+BEGIN_SRC bash
+$ cd HW1
+$ sbt compile
+#+END_SRC
+
+** Run the tests with ScalaTest
+
+#+BEGIN_SRC bash
+$ cd HW1
+$ sbt test
+#+END_SRC

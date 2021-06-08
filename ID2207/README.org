@@ -1,0 +1,110 @@
+* SEP
+
+** Up and running
+
+*** Install and start mongodb.
+
+You can install mongodb locally. But the most easiest way to start up a =mongodb= instance is via =docker= :
+
+#+BEGIN_SRC bash
+$ docker run -p 27017:27017 --name mongo -d mongo:latest
+#+END_SRC
+
+*** Database admin
+
+Login to mongodb server
+
+#+BEGIN_SRC bash
+docker exec -it mongo
+## in case container is not running
+docker start mongo
+## check if container is running correctly
+docker ps
+#+END_SRC
+
+Now you can use regular mongo command to manipulate data
+
+#+BEGIN_SRC javascript
+use sep;
+show collections;
+db.user.find().pretty();
+#+END_SRC
+
+
+*** Start Spring boot web server
+
+#+BEGIN_SRC bash
+$ cd server
+$ ./gradlew clean build
+$ ./gradlew app:bootRun
+#+END_SRC
+
+*** Start node.js server to run frontend
+
+#+BEGIN_SRC bash
+$ cd client
+$ npm install
+$ npm start
+#+END_SRC
+
+*** Run tests
+
+#+BEGIN_SRC bash
+$ cd server
+$ ./gradlew clean test
+#+END_SRC
+
+*** REST APIs
+
+After spring boot server is started, you can access the =Swagger= document by visting [[http://localhost:8080/swagger-ui.html][http://localhost:8080/swagger-ui.html]]
+
+A =Bearer= auth token is required for most REST endpoints.
+
+To obtain a =Bearer= token, you need to first register a =user account= by calling the [[http://localhost:8080/swagger-ui.html#/user-controller/registerUsingPOST][register API]].
+Or by calling the [[http://localhost:8080/swagger-ui.html#/auth-controller/authUsingPUT][Login API]] if you already have a user account registered in the system
+
+Once you have obtained the token, you need to include it into the =HTTP Request Header=
+
+#+BEGIN_SRC
+Authorization: Bearer _f1N_TPhF6TN8_a9Xra9cLH1ImE
+#+END_SRC
+
+If you want to test the REST APIs via [[http://localhost:8080/swagger-ui.html][Swagger UI]], you need to click =Authorize= button and input =Bearer your_token= first.
+The token will then be set in every request you are going to make.
+
+**** Register a SEP user
+
+When calling register API, you need to supply one of the folowing predefined =Department= , =Role= and =Team= in the request payload:
+
+| Department       | Role                            | Team           |
+| CUSTOMER_SERVICE | CUSTOMER_SERVICE_OFFICER        | DECORATION     |
+| PRODUCTION       | CUSTOMER_SERVICE_SENIOR_OFFICER | PHOTOGRAPH     |
+| FINANCE          | PRODUCTION_MANAGER              | MUSIC          |
+| HR               | FINANCIAL_MANAGER               | GRAPHIC_DESIGN |
+| ADMINISTRATION   | HR_MANAGER                      | COMPUTER       |
+|                  | ADMINISTRATION_MANAGER          |                |
+|                  | EMPLOYEE                        |                |
+
+
+**** EPR
+
+When creating or updating =EPR=, you probably need to specify client's preferences. The preferences need to be in the following format:
+
+#+BEGIN_SRC javascript
+{
+  preferences: [
+     {"preferenceArea": "MUSIC", "description": "Required Mozart and Beethooven"},
+     {"preferenceArea": "DECORATION", "description" : "Classic style is requried"}
+  ]
+}
+#+END_SRC
+
+And =preferenceArea= should be one of the predefined value below:
+
+| DECORATION          |
+| FOOD_AND_DRINK      |
+| MUSIC               |
+| FILMING_AND_PHOTOS  |
+| POSTER_AND_ART_WORK |
+| COMPUTER_RELATED    |
+| OTHER               |

@@ -1,0 +1,55 @@
+* SVM
+
+** formulate the indicator function and explain how it relates to the outcome of the classification,
+
+SVM performs classification by finding the *maximum-margin hyperplane* (i.e. decision boundary) that divides the group of points labeled with =+= from the group of points whose label is =-1=.
+The maxumum-margin is defined so that the distance between the hyperplane and the nearest point =Xi= from either group is maximzied.
+
+Any hyperplane can be writter as the set of points =x= stisfying: (As a node each =x= is a /p-dimensional real vector/.
+
+[[file:img/eq1.png]]
+
+where vector =w= is the normal vector to, that is perpendiculer the hyperplane. The parameter =b / ||w||= determines the offset of the hyperplane from origin along the normal vector =w=.
+
+
+We can select two parallel hyperplanes that can be descibed by the equations:
+
+- =w.x + b = 1=  (any point on or above this boundary is of positive class, with label 1)
+- =w.x + b = -1= (any point on or under this boundary is of negative class, with label -1)
+
+And the distance between these two hyperplanes is =2 / ||w||=, so to maximize the distance between the planes we want to minimize =||w||=.
+
+[[file:img/SVM_optimize.png]]
+
+
+Distance =2 / ||w||= is calculated by taking support vectors /x2/ , /x1/ from each of class and calucated their vector differece which is =(x2 -x1)=.
+The distance between these 2 hyperplanes is the dot product of the vector =(x2 -x1)= and unit vector =w / ||w||=. see [[https://en.wikipedia.org/wiki/Scalar_projection][Scalar projecton]]
+
+[[file:img/SVM_optimize_1.png]]
+
+** Use the mathematical formulation of the optimization task.
+
+We find /w/ and /b/ by solving the following objective function using [[https://en.wikipedia.org/wiki/Quadratic_programming][Quadratic Programming]]:
+
+[[file:img/SVM_optimize_2.png]]
+
+
+** Explain the effect of the C-value when using slack variables.
+
+An ideal SVM analysis should produce a hyperplane that completely separates the vectors (cases) into two non-overlapping classes.
+However, perfect separation may not be possible, or it may result in a model with so many cases that the model does not classify correctly.
+In this situation SVM finds the hyperplane that maximizes the margin and minimizes the misclassifications.
+
+SVM assigns a slack variable to each misclassified point and the sum of slack variables is multiplied by a /penality/ strength =C=, which specifies how much do we care about errors.
+The =C = oo= corresponds to a hard margin (if possible).
+If =C= is very small then the width between the two hyperplanes becomes larger.
+
+
+[[file:img/SVM_optimize_3.png]]
+
+** predict and explain the outcome of using different kernels
+
+There are situations that the traning data isn't linearly separable in /n-dimensional/ space.
+*Kernel trick* is the kernal function used by /SVM/ to transform training data into a higher dimensional feature space to make it possible to perform linear separation.
+
+[[file:img/SVM_kernal.png]]

@@ -1,0 +1,54 @@
+\documentclass[10pt]{proc}
+
+\begin{document}
+
+  \large{\textbf{Reading Assignment 2}}\\
+
+  \large{\textbf{Authors: Harald Ng, Chuan Su}}\\
+
+  \section{Motivation}
+  The paper reviewed is \textit{Scalable Database Logging for Multicores} by Jung et al., 2017.
+  The motivation for this paper is to resolve the multicore scalability problem of centralized logging for database transaction systems.
+
+  \section{Contributions}
+  \begin{itemize}
+    \item \textbf{First contribution}
+    The authors of this paper identified non-scalable locks used in the centralized logging as the main bottleneck.
+    \item \textbf{Second contribution}
+    The authors of this paper solved the synchronous I/O delay when flushing a log buffer to stable storage by the WAL protocol and enhanced system-wide utilization.
+    \item \textbf{Third contribution}
+    The authors of this paper present a fast and scalable logging method, \texttt{ELEDA} that migrate a surge of transaction logs from volatile memory to stable storage without risking durable transaction atomicity.
+  \end{itemize}
+
+  \section{Solution}
+    \begin{itemize}
+  	\item \textbf{Highly concurrent data structure based logging method}
+  	  The fundamental performance bottleneck imposed on dabase logs is the sequentiality of logging, strictly requiring that the sequence of 
+	  LSN (Sequence Log Number) match the log order in an in-memory image of a log file. The authors developed a highly concurrent data structure based logging method and solved this serialization bottleneck in centralized logging.
+  	 
+  	 The developed method uses a central log buffer, which is one contiguous memory logically divided into chunks by I/O unit size and multiple transactions make progresses by reserving log space and copy logs to the reserved log buffer concurrently. While transactions write logs to the cental buffer concurrenly, the highly concurrent data structure is responsible for tracking LSN (Log sequential number) holes made during dynamic buffer space allocation and copying and advancing SBL (Sequenatially Buffered LSN) and thus database threads can make rapid progress without suffering from  serialization bottleneck caused by global locking.
+
+  	 \item \textbf{Transaction switching and asynchronous callback mechanisms integration}
+  	The WAL (write-ahead logging) protocol provides atomicity and durability (two of the ACID properties) in database sytems by enforing that the changes must be first recorded in the log before the changes are written to the database, which incurs synchronous I/O delay and is detrimental to high performance reliable transaction processing.
+  	
+  	The authors solved the synchronous I/O delay problem by integrating their logging method with transaction swtiching and asynchronous callback mechnisims. Transaction switching is done by letting sychronous I/O waiting transaction be swtiched over other useful transaction processing work. And once the waiting I/O is completed, the computation results held by this I/O is delivered to the clients asynchrously through callback mechanisim.
+  	
+  	For example, there is a committing transaction \texttt{T1} who just writes a commit log to the log buffer, but the SBL is not advanced to its LSN due to the LSN holes. Then, it is unsafe for \texttt{T1} to return results to the client because its commit log is not durable yet. At this point, the database thread detaches \texttt{T1}  (pre-committed transaction) and put it to the waiting state, and then the database thread attaches a runnable transaction \texttt{T2}, which has useful operations to execute. When all LSN holes preceding \texttt{T1's}  commit LSN are completely filled, \texttt{T1} is put to a running state and the callabck registered for \texttt{T1} is invoked to deliver an asycnchronous notification to the clients.
+  	 
+  \end{itemize}
+  \section{Strong Points}
+  \begin{itemize}
+    \item \textbf{Clear structure and problem statement}. The paper has a very clear structure, where each section has purposeful content with a suitable heading. Moreover not only did the they authors identify the problems to be addressed but clearly explain what incurs the problem in detail, e.g. the widespread of global lock in database engines limits the scalability of database logging on multicore system.
+    \item \textbf{Clear background concepts description}.  The paper clearly described the essential concepts needed for understanding the problems that the authors were trying to address and their contributions.
+    \item \textbf{In-depth evaluation and analysis}. The authors have done extensive experiments and evaluations with different settings, e.g, plugging \texttt{ELEDA} to WiredTiger, the default storage engine for MongoDB, by replacing its log manager to evaluate \texttt{ELEDA}'s scalable logging performance under high update workload.
+  \end{itemize}
+
+  \section{Weak Points}
+  \begin{itemize}
+    \item \textbf{Longer commit latency} The authors' solution has longer commit latency - an average commit latency of 3.7ms in contrast to that WiredTiger has 1ms. The authors left this issue open to the community.
+    \item \textbf{Overlook of evaluation with joined settings} The authors only evaluated \texttt{ELEDA} performance by adjusting a single setting at a time, such as high isolation level or key-value workload with large payload size in two experiments. In real world scenarios, larger payload size of key-value workload may occur under high isolation level, it would have been interesting to see how well the solution performs.
+    \item \textbf{Overlook of evaluation with the experiment settings used in the systems being compared } The authors evaluated their solution to compare with other technologies based on their own defined settings and experiments. The solution will be more convincing if the evaluation was using similar settings adopt in the evaluations of the systems being compared to.
+
+  \end{itemize}
+
+\end{document}

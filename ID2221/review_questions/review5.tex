@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+
+\title{Review Questions 5}
+\author{Harald Ng \\
+        Chuan Su}
+
+\maketitle
+\begin{enumerate}
+    \item The differences are based on how the graph is traversed. In the Vertex-centric programming model, the vertices are iterated over for the scatter and the gather phases. In the edge-centric model, the edges are iterated over instead. The way of iterating impacts the performance. Usually in graphs, there are (many) more edges than vertices. This implies that when accessing edges we have to go to disk which is expensive. In the vertex-centric model, we will access the vertices of inbound or outgoing edges of each vertex we iterate over. This implies that the pointer of the disk will jump back-and-forth, which represents random access and is inefficient. In the edge-centric model, we will instead access the edge data in disk sequentially and send update over each edge (scatter phase) or apply update to the edge's destination (gather phase), but multiple times. However, this is still more efficient compared to the vertex-centric model.
+    
+    \item GraphX and GraphLab are two different computation models, GraphX represents data-parallel model and GraphLab represents graph-parallel model. In the graph-parallel model, due to restrictions in how computation can be expressed and how the graph can be distributed, the systems can execute graph algorithms much more efficiently compared to general data-parallel systems. But these restrictions also results in some down sides. Many important stages in typical graph analytics pipeline become difficult to express, such as constructing the graph, changing the structure or expressing a computation the involves multiple graphs. Hence, in these cases it is more efficient to use data-parallel platforms such as GraphX. Pure graph-processing models such as GraphLab are more suitable if there is an existing graph that is not expected to be modified in its structure too much and the will mainly be used for executing graph algorithms on it.
+    
+	\item
+	\begin{verbatim}
+	Pregal_max(MessageIterator messages):
+	  i_val := val
+	  for each message m
+	    if m > val then val := m
+			
+	  if i_val == val then
+	    vote_to_halt
+	  else
+	    for each neighbor v
+	      send_message(v, val)
+	\end{verbatim}
+
+	\begin{verbatim}
+	GraphLab_max(i):
+	  max := R[i]
+	  foreach (j in in_neighbours(i)):
+	    if R[j] > max then max := R[j]
+			
+	  R[i] := max
+	  foreach(j in out_neighbours(i)):
+	    signal vetex-program on j
+	\end{verbatim}
+
+	\begin{verbatim}
+	PowerGraph_max(i):
+	  Gather(j -> i): return R[j]
+	  
+	  sum(a, b): return max(a, b)
+	  
+	  Apply(i, max): R[i] := max
+	  
+	  Scatter(i -> j):
+	    if R[i] changed then activate(j)
+	\end{verbatim}
+
+\end{enumerate}
+\end{document}

@@ -1,0 +1,29 @@
+** Run Hadoop, HBase in docker containers
+
+To build docker image and start docker containers:
+
+#+BEGIN_SRC bash
+make build # build docker images, only need to be run once.
+make start
+#+END_SRC
+
+Now you should be able to access Hadoop =namenode= and =datanode= at
+
+ - namenode: [[http://localhost:9870]]
+ - datanode: [[http://localhost:9864]]
+
+To enter Hadoop shell run
+
+#+BEGIN_SRC bash
+docker exec -it namenode bash
+#+END_SRC
+
+To enter HBase shell run
+
+#+BEGIN_SRC bash
+make hbase_shell
+#+END_SRC
+
+** Stop docker containers
+
+Run =make down= to stop hadoop and hbase docker containers.

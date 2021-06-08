@@ -1,0 +1,117 @@
+* Bind9 DNS Config
+
+** Install bind9, bind9utils
+
+#+BEGIN_SRC bash
+sudo apt update
+sudo apt install bind9 bind9utils
+#+END_SRC
+
+** Edit =/etc/bind/named.conf.local= file.
+
+=sudo vim /etc/bind/named.conf.local= and add zones configuration:
+
+#+BEGIN_SRC bash
+   zone "isp5.lab" { type master; file "/etc/bind/db.isp5.lab"; };
+   zone "5.5.10.in-addr.arpa" { type master; file "/etc/bind/db.10.5.5"; };
+#+END_SRC
+
+Run the command =sudo named-checkconf -z /etc/bind/named.conf= to validate.
+
+** Create a file at =/etc/bind/db.isp5.lab=
+
+First copy =/etc/bind/db.local/=:
+
+#+BEGIN_SRC bash
+sudo cp /etc/bin/db.local /etc/bind/db.isp5.lab
+#+END_SRC
+
+First replace the settings that has  =localhost.=, =root.localhost.= to =isp5.lab=, =root.isp5.lab.=
+
+- *DO NOT forget* the 'dot'/'.' in the end
+- *MUST increament the serial number:* =2     ; Serial=, every time you make changes this file
+
+| @ | IN | SOA | localhost. | root.localhost. |
+Change to
+| @ | IN | SOA | isp5.lab. | root.isp5.lab. |
+
+Then update the settings:
+
+| @       | IN | NS    | ns.isp5.lab. |
+| @       | IN | A     |     10.5.5.5 |
+| ns      | IN | A     |     10.5.5.5 |
+| dhcpd   | IN | CNAME |           ns |
+| www     | IN | CNAME |           ns |
+| client1 | IN | A     |  10.5.10.100 |
+| client2 | IN | A     |  10.5.10.101 |
+
+Run the command =sudo named-checkzone forward /etc/bind/db.isp5.lab= to validate.
+
+** Create a file at =/etc/bind/db.10.5.5=
+
+First copy =/etc/bind/db.isp5.lab=
+
+#+BEGIN_SRC bash
+sudo cp /etc/bind/db.isp5.lab /etc/bind/db.10.5.5
+#+END_SRC
+
+And update the settings:
+
+|   @ | IN | NS  | ns.isp5.lab.      |
+|   5 | IN | PTR | ns.isp5.lab.      |
+| 100 | IN | PTR | client1.isp5.lab. |
+| 101 | IN | PTR | client2.isp5.lab. |
+
+*The serial number in the reverse zone needs to be incremented on each changes as well*
+
+Run the command =sudo named-checkzone reverse /etc/bind/db.10.5.5= to validate.
+
+** Root DNS server hint
+Edit file =/etc/bind/db.root= and replace its content with the lines below
+
+#+BEGIN_SRC bash
+. 3600000 IN NS ns.
+ns. 3600000 A 10.0.0.11
+#+END_SRC
+
+** Edit =/etc/bind/named.conf.options=
+
+Replace its content with the lines below
+
+#+BEGIN_SRC bash
+options {
+// dnssec-validation auto;
+auth-nxdomain no;
+listen-on-v6 { any; };
+allow-query { any; };
+allow-recursion { any; };
+};
+
+#+END_SRC
+** Start bind9
+
+Start =bind9= service
+#+BEGIN_SRC bash
+sudo chown -R bind:bind /etc/bind
+sudo chmod -R 755 /etc/bind
+
+sudo systemctl start bind9
+#+END_SRC
+
+** Check status
+Check =bind9= service status
+#+BEGIN_SRC bash
+sudo systemctl status bind9
+#+END_SRC
+
+*** Troubleshooting
+if server status is not *active*, check the error logs by running command =view /var/log/syslog=.
+And press =SHIFT + g= to scroll to the bottom of the file.
+
+After having fixed the issue, restart bind9 server and very status again.
+
+** Verify from Client VM
+
+ #+BEGIN_SRC
+ dig isp5.lab
+ #+END_SRC

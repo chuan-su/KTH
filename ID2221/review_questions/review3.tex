@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+
+\title{Review Questions 3}
+\author{Harald Ng \\
+        Chuan Su}
+
+\maketitle
+\begin{enumerate}
+    \item \texttt Both \texttt{DataFrame} and \texttt{DataSet} are distributed collections of data in Spark. \texttt{DataFrame} organized the data into columns and the elements are Rows that itself only are generic untyped JVM objects. This implies that there are no type checking at compile-time and we could get runtime exceptions. The \texttt{DataSet} API unifies the \texttt{DataFrame} and RDD APIs to provide type safety. An example where \texttt{DataSet} is more beneficial is that if the programmer would write the wrong name of a column. \texttt{DataSet} would have a compilation error, but \texttt{DataFrame} would only throw a runtime error.
+
+    \item
+       \texttt{Window.rowsBetween(-1, 1)} specifies a frame with \texttt{1 PRECEDING} as the start boundary and \texttt{1 FOLLOWING} as the end boundary, relative to the physical offset from the position of the current input row  \texttt{CURRENT ROW}.
+
+    For every current input row, spark sql calculates the average of people age over the rows that fall into the frame defined by start and end boundary.
+
+    The result is shown as below:
+    \begin{verbatim}
+    +-------+---+------------------+
+    |   name|age|           avg_age|
+    +-------+---+------------------+
+    |Michael| 15|              22.5|
+    |   Andy| 30|21.333333333333332|
+    | Justin| 19|20.333333333333332|
+    |   Andy| 12|16.666666666666668|
+    |    Jim| 19|14.333333333333334|
+    |   Andy| 12|              15.5|
+    +-------+---+------------------+
+    \end{verbatim}
+
+    \item The main difference is that log-based broker systems persist all events in a sequential log. Other message brokers deletes a message once it has been consumed.
+
+    \item For \texttt{Windowing By Processing Time}, stream processing system buffers up incoming data into windows until some amount of processing time has passed, E.g. five-minute fixed window. For \texttt{Windowing By Event Time}, stream processing system buffers up incoming data into windows based on the times at which event actually occured, which is capable of handling out-of-oder events.
+
+    Watermarks flow as part of the data stream and carry a timestamp \texitt{t}, which are used by stream processing system to measure progress in event time and and deal with lateness.
+    A watermark \texttt{w(t)} declares that event time has reached time \texttt{t} in the stream, which means there should be no more elements from the stream with a timestamp less than \texttt{t}. If an arriving event lies within the watermark, it gets used to update a query. Otherwise it will start getting dropped.
+
+    \item There are mainly two types of delivery guarantees; \textbf{At-least-once} and \textbf{Exactly-once}. At-least-once guarantees that a message is delivered to the consumer at least once, but could also redeliver the same message multiple times. Exactly-once implies that a message will only be delivered to the consumer exactly once.
+
+
+\end{enumerate}
+
+
+\end{document}

@@ -1,0 +1,46 @@
+*.class
+*.log
+
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+.idea
+out
+
+# Vim
+tags
+.*.swp
+.*.swo
+
+# Emacs/Ensime
+.ensime
+.ensime/
+.ensime_cache/
+.ensime_lucene/
+ensime.sbt
+
+# Eclipse
+build
+.classpath
+.project
+.settings
+org.scala-ide.sdt.core/META-INF/MANIFEST.MF
+org.scala-ide.sdt.update-site/site.xml`
+

@@ -1,0 +1,43 @@
+* Rudy: a small web server
+
+** Up and running
+
+#+BEGIN_SRC bash
+ erl -make
+#+END_SRC
+
+Enter erlang shell and start rudy tcp server.
+
+#+BEGIN_SRC erlang
+server:start(5001).
+#+END_SRC
+
+Now open browser to [[http:localhost:5001/kth/courses/id2201]]
+
+Stop rudy server by
+
+#+BEGIN_SRC erlang
+server:stop().
+#+END_SRC
+
+
+
+** Stress tests and benchmarking
+
+Run stress tests with a small benchmark program.
+
+#+BEGIN_SRC erlang
+%% 200 is the number of parallel requests to be initiated
+stress_tests:bench("localhost",5001,200).
+
+%% you can kill benchmark program process
+exit(whereis(benchmark), "stop").
+
+#+END_SRC
+
+Specify the amount of thread schedulers for running rudy server.
+
+#+BEGIN_SRC bash
+erl -smp +S 4 # 4 thread schedulers
+erl -smp +S 1 # single thread schedulers.
+#+END_SRC

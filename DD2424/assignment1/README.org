@@ -1,0 +1,8 @@
+* Assignment1 - One layer netweok multiple class classifier
+
+The dataset we are using in assignment is [[https://www.cs.toronto.edu/~kriz/cifar.html][CIFAR-10]] image dataset.
+
+To run the code, first create a directiory `dataset/` and move the `cifar-10-matlab.tar.gz` file to the `dataset` directory you have just created.
+
+If you have [[https://www.docker.com/][docker]] installed then you call simply run `./run.sh` otherwise you need
+to install [[https://jupyter.org/][Python Jupyter notebook]].

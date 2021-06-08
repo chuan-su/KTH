@@ -1,0 +1,12 @@
+Case1: Biological_Systems_Engineering.f 0
+
+The document introduced both undergraduate and graduate programs but not in mathematics subject.
+Even though the keyword of mathematic appears in this document it is not related to our search query.
+
+Case2: Fiber_and_Polymer_Science.f 1
+
+The document described most of its undergraduate program that includes mathematics courses
+
+Case3: Computer_Science.f 3
+
+The document introduced its Computer Science Program that involves many mathematic courses which is quite relevant to our search query

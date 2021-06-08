@@ -1,0 +1,7 @@
+export const hrConstants = {
+    HRCREATE_REQUEST:  'NEW-HR_REQUEST',
+    HRCREATE_SUCCESS: 'NEW-HR_SUCCESS',
+    HRCREATE_FAILURE: 'NEW-HR_FAILURE',
+
+
+};

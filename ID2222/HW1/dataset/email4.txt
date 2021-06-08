@@ -1,0 +1,10 @@
+I hope you are well.
+
+I am currently recruiting for a number of Contract Javascript Developers for a client of mine based in Stockholm, Sweden.
+
+The two profiles that I am recruiting for are:
+
+Fullstack Developers - Node.js, React and Redux
+Backend Developers (Serverside) - Node.js, Kafka, Docker, etc.
+
+If you are interested in discussing the roles in more detail, please get in touch and I would be happy to share further information.

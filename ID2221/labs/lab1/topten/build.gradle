@@ -1,0 +1,25 @@
+plugins {
+  id 'java'
+}
+repositories {
+  jcenter()
+}
+
+dependencies {
+   // https://mvnrepository.com/artifact/org.apache.hbase/hbase
+  implementation group: 'org.apache.hbase', name: 'hbase', version: '2.2.1', ext: 'pom'
+  // https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-core
+  implementation group: 'org.apache.hadoop', name: 'hadoop-core', version: '1.2.1'
+  // https://mvnrepository.com/artifact/org.apache.hbase/hbase-mapreduce
+  implementation group: 'org.apache.hbase', name: 'hbase-mapreduce', version: '2.2.1'
+
+
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+    }
+  }
+}

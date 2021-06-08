@@ -1,0 +1,12 @@
+*.aux
+*.log
+*.gz
+.ipynb_checkpoints/
+data/
+target/
+labs/lab2/lab2.pdf
+project/results.txt
+project/build.sbt
+project/dataset/test.txt
+project/dataset/twitter_medium
+project/result/community/._SUCCESS.crc

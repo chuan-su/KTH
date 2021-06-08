@@ -1,0 +1,56 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+
+\title{Review Questions 4}
+\author{Harald Ng \\
+        Chuan Su}
+
+\maketitle
+\begin{enumerate}
+    \item \texttt{DStream} stands for \textit{Discretized Stream} and is a basic abstraction for a continuous sequence of \texttt{RDD}s which represents a continuous stream of data. Operations applied on \texttt{DStream} translates to operations on the underlying \texttt{RDD}s. In the case of \texttt{map}, it will perform the provided function (the argument) to each of the \texttt{RDD}s.
+
+    \item The \texttt{mapWithState} operation is used for stateful stream processing. It takes incoming data and maps it to a state according to the \texttt{State} argument which specifies how the state is updated. \texttt{mapWithState} is the successor of \texttt{updateStateByKey}. Some of the weaknesses of \texttt{updateStateByKey} that are solved by \texttt{mapWithState} are:
+    \begin{itemize}
+        \item At every batch arrival, the \texttt{updateStateByKey} iterates over all entries in the state store. \texttt{mapWithState} will instead only be executed on entries concerned by that state change. This can have a significant performance impact.
+        
+        \item In \texttt{updateStateByKey}, the return value must be the same as the received state parameter. \texttt{mapWithState} is more flexible and allows a different return state.
+        
+        \item There is no timeout mechanism provided by \texttt{updateStateByKey}. Using \texttt{mapWithState}, we can set a timeout and if we hit a timeout, the operation will be invoked with a special flag.
+    \end{itemize}
+
+    \item \texttt{Flink} handles fault tolerance by drawing consistent snapshots of the distribtued data stream and operator state. The snapshots are the consistent checkpoints to which the systme can fall back in case of a flow at the stream sources.
+      Snapshoting of data stream is achieved by injecting stream barriers into the data flow at the stream sources. The barrier injection point for a snapshot is the position in the source stream up to which the snapshot covers the data. Snapshoting of operator state is taken at the point in time thet all snapshot barriers from input streams are received, which means all updates to the state from records before the barriers will have been made.
+     Upon a failure, \texttt{Flink} selects the latest completed checkpoint and redeploys the entire distributed dataflow and gives each operator the state that was snapshotted as part of this checkpoint. The sources are set to start reading the stream from this position.
+
+    \item For notation, we call the most-left figure \textit{figure 1}, the middle figure \textit{figure 2} and the most-right figure \textit{figure 3}. We could see that Google Cloud Dataflow supports batch processing data in figure 1. In batch processing, we would wait for all data to arrive and then group them together before working with it. In figure 1, we can see that the actual watermark is placed at the latest processing time and the area covered by it covers all the events.
+    \par
+    Figure 2 illustrates micro-batching. We can see that the system gathers input events for one minute, processes them and then repeats. This corresponds to having one minute micro-batches. This also implies that we have one new watermark every micro-batch round, which can also be seen by the actual watermark line drawn on each minute on the processing time axis.
+    \par
+    Figure 3 shows real streaming processing. We handle the data as soon as it arrives, hence the actual watermark being drawn closely to the processing time of each event. This way of processing gives lower latency compared to micro-batching.
+
+\end{enumerate}
+
+
+\end{document}

@@ -1,0 +1,97 @@
+* Assignment 2
+
+** Gradient Checks
+
+To verify our anylytic gradient computations are correct, we applied the [[http://cs231n.github.io/neural-networks-3/][relative error comparison]] approach that comparing
+the numerical gradient and analytic gradient and verified that the relative error is below =1e-6=.
+
+#+BEGIN_SRC python
+def gradients_check(W, grad_analytics, compute_cost):
+    h = 1e-5
+    for i in range(W.shape[0]):
+        for j in range(W.shape[1]):
+            tmp = W[i,j]
+
+            W[i,j] = tmp + h
+            c1, _ = compute_cost(X, y)
+
+            W[i,j] = tmp - h
+            c2, _ = compute_cost(X, y)
+
+            W[i,j] = tmp # reset
+
+            grad_numerical = (c1 - c2) / (2*h)
+            grad_analytic = grad_analytics[i,j]
+
+            rel_error = abs(grad_numerical - grad_analytic) / (abs(grad_analytic) + abs(grad_numerical))
+
+            if (rel_error > 1e-6):
+                print("numerical: {} analytic: {}, relative error: {:.3e}".format(grad_numerical, grad_analytic, rel_error))
+#+END_SRC
+
+** Cyclical learning rates. (Lambda = 0.01)
+
+With the default =Lambda=0.01= value for the regularization:
+
+*** Figure 1
+
+| eta_min | eta_max | lambda | n_s | cycle | step | accuracy (validation set) |
+|    1e-5 |    1e-1 |   0.01 | 500 |     1 | 1000 |                    45.93% |
+
+
+[[./img/fig1.png]]
+
+*** Figure 2
+
+| eta_min | eta_max | lambda | n_s | cycle | step | accuracy (validation set) |
+|    1e-5 |    1e-1 |   0.01 | 800 |     1 | 1593 |                    46.24% |
+|    1e-5 |    1e-1 |   0.01 | 800 |     2 | 3186 |                    46.55% |
+|    1e-5 |    1e-1 |   0.01 | 800 |     3 | 4779 |                    47.21% |
+
+[[./img/fig2.png]]
+
+** Coarse Search
+
+The values we used for the coarse sesarch are:
+
+#+BEGIN_SRC python
+lambdas =
+[0.0746, 0.0220, 0.0075, 0.0116, 0.0432, 0.0094, 0.0910, 0.0594, 0.0037, 0.0028, 0.0009]
+# random number between 10^-5 and 10^-1
+# format(np.power(10, (-5 + (-1 - (-5)) * np.random.random(1,)))[0], '.4f')
+#+END_SRC
+
+And the hpyer-parameter settings for the 3 best performing networks are:
+
+| eta_min | eta_max | lambda |  n_s | cycle | accuracy (validation) |
+|    1e-5 |    1e-1 | 0.0009 | 1000 |     2 |                52.54% |
+|    1e-5 |    1e-1 | 0.0028 | 1000 |     2 |                52.28% |
+|    1e-5 |    1e-1 | 0.0075 | 1000 |     2 |                52.10% |
+
+** Fine Search
+
+The values we used for the fine search are:
+
+#+BEGIN_SRC python
+regs = np.linspace(0.0006, 0.0015, 6)
+# [0.0006 , 0.00078, 0.00096, 0.00114, 0.00132, 0.0015 ]
+#+END_SRC
+
+And the hpyer-parameter settings for the 3 best performing networks are:
+
+| eta_min | eta_max |  lambda |  n_s | cycle | accuracy (validation) |
+|    1e-5 |    1e-1 | 0.00096 | 1000 |     2 |                53.12% |
+|    1e-5 |    1e-1 | 0.00078 | 1000 |     2 |                52.72% |
+|    1e-5 |    1e-1 | 0.00132 | 1000 |     2 |                52.46% |
+
+
+** Final result
+
+We used =lambda=0.00096= to train the network and obtained accuracy =52.98%= in the third cycle:
+
+| eta_min | eta_max |  lambda |  n_s | cycle | step |    cost | accuracy |
+|    1e-5 |    1e-1 | 0.00096 | 1000 |     1 | 2000 | 1.44259 |   51.36% |
+|    1e-5 |    1e-1 | 0.00096 | 1000 |     2 | 4000 | 1.42201 |   53.12% |
+|    1e-5 |    1e-1 | 0.00096 | 1000 |     3 | 6000 | 1.42254 |   52.98% |
+
+[[./img/final.png]]

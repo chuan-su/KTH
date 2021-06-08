@@ -1,0 +1,9 @@
+* DD2421 Machine Learning Lab work
+
+Assignments for course [[https://kth.instructure.com/courses/8252][Machine Learning DD2421]]
+
+** Content
+
+ - [[file:DecisionTree/README.org][Decison Trees]]
+ - Support Vector Machines
+ - Bayes Classifiers and Boosting

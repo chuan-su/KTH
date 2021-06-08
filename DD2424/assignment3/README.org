@@ -1,0 +1,134 @@
+* Assignment 3
+
+** Gradient Checks
+
+To verify our anylytic gradient computations are correct, we applied the [[http://cs231n.github.io/neural-networks-3/][relative error comparison]] approach that comparing
+the numerical gradient and analytic gradient and verified that the relative error is below =1e-6=.
+
+We performed gradients check on our 3-layes model with and without =Batch Norm=.
+Gradients =dw1,db1,dw2,db2,dw3,db3= and =dgamma1, dbeta1, dgamma2, deta2= were checked.
+
+It is remarkable that when performing gradients check of =Batch Norm=, the cost must be computed as if the model were in training mode.
+If you check the gradients as if the model were in test mode, the batch norm will use the running mean and variance instead of batch mean and batch variance, and the gradient checking will fail.
+
+For details of our gradients check procedure, please refer to [[https://gits-15.sys.kth.se/chuans/DL/blob/master/assignment3/gradients_check.py][gradients_check.py source code]]
+
+
+** 3-Layer Network
+
+The table belows shows our results of evaluation when train the 3-layer network with =50,50= at each hidden layer.
+
+
+| eta_min | eta_max |  n_s | cycle | lambda | xavier init | batch shuffle | batch norm | test accuracy |
+|    1e-5 |    1e-1 | 2250 |     2 |  0.005 | YES         | YES           | *NO*       |        53.84% |
+|    1e-5 |    1e-1 | 2250 |     2 |  0.005 | YES         | YES           | *YES*      |        54.20% |
+
+
+*** Figure 1
+
+Figure 1 shows the evolution of the loss funtion *without* Batch Normalization:
+
+[[./img/3_layer_nobn.png]]
+
+*** Figure 2
+
+Figure 2 shows the evolution of the loss funtion *with* Batch Normalization:
+
+[[./img/3_layer_bn.png]]
+
+
+** 6-Layer Network
+
+The table belows shows our results of evaluation when train the 3-layer network with hidden layer =50,30,20,20,10=.
+
+
+| eta_min | eta_max |  n_s | cycle | lambda | xavier init | batch shuffle | batch norm | test accuracy |
+|    1e-5 |    1e-1 | 2250 |     2 |  0.005 | YES         | YES           | *NO*       |        51.34% |
+|    1e-5 |    1e-1 | 2250 |     2 |  0.005 | YES         | YES           | *YES*      |        54.06% |
+
+
+*** Figure 3
+
+Figure 3 shows the evolution of the loss funtion *without* Batch Normalization:
+
+[[./img/6_layer_nobn.png]]
+
+*** Figure 4
+
+Figure 4 shows the evolution of the loss funtion *with* Batch Normalization:
+
+[[./img/6_layer_bn.png]]
+
+
+** Lambda corase and fine search
+
+*** Coarse Search
+
+The =lambda= ranges for the coarse search are:
+
+#+BEGIN_SRC python
+lambdas =
+[0.0746, 0.0220, 0.0075, 0.0116, 0.0432, 0.0094, 0.0910, 0.0594, 0.0037, 0.0028, 0.0009]
+# random number between 10^-5 and 10^-1
+# format(np.power(10, (-5 + (-1 - (-5)) * np.random.random(1,)))[0], '.4f')
+#+END_SRC
+
+The csv file [[https://gits-15.sys.kth.se/chuans/DL/blob/master/assignment3/coarse.csv][coarse.csv]] shows our coarse search result.
+And we discoved that =lambda=0.0094= gives the highest accuracy =54.68%=.
+
+*** Fine Search
+Then we tried fine search with value range in:
+#+BEGIN_SRC python
+regs = np.linspace(0.001, 0.015, 10)
+[0.001, 0.00255556, 0.00411111, 0.00566667, 0.00722222, 0.00877778, 0.01033333, 0.01188889, 0.01344444, 0.015]
+#+END_SRC
+
+The csv file [[https://gits-15.sys.kth.se/chuans/DL/blob/master/assignment3/fine_search.csv][fine_search.csv]] shows our fine search result.
+And we found the =lambda=0.00566667= gives the highest accuarcy =54.7%=.
+
+We then applied =lambda=0.0057= into our 3-layers network and achieved =54.9%= with batch normalization.
+
+*** Figure 5
+
+Figure 5 shows the evolution of the loss funtion *with* Batch Normalization and =lambda=0.0057= on the 3-layers networks with hidden ndoes =[50,50]=
+
+[[./img/3_layer_bn_best.png]]
+
+** Sensitive to initialization
+
+For each training regime instead of using He initialization, initialize each weight parameter to be normally distributed with =sigmas= equal to
+the same value =sig= at each layer.
+
+The figures below shows our experiment result when traing the network with and withou BN with =sig=1e-1=, =1e-3= and =1e-4= respectively:
+
+| eta_min | eta_max | n_s | cycle | lambda | xavier init |  sig | batch norm | test accuracy |
+|    1e-5 |    1e-1 | 900 |     2 | 0.0057 | NO          | 1e-1 | *NO*       |         51.7% |
+|    1e-5 |    1e-1 | 900 |     2 | 0.0057 | NO          | 1e-1 | *YES*      |        52.96% |
+|    1e-5 |    1e-1 | 900 |     2 | 0.0057 | NO          | 1e-3 | *NO*       |         9.82% |
+|    1e-5 |    1e-1 | 900 |     2 | 0.0057 | No          | 1e-3 | *YES*      |        53.82% |
+|    1e-5 |    1e-1 | 900 |     2 | 0.0057 | NO          | 1e-4 | *NO*       |         9.82% |
+|    1e-5 |    1e-1 | 900 |     2 | 0.0057 | NO          | 1e-4 | *YES*      |        52.98% |
+
+*** Figure 6 sig=1e-1, without BN, accuracy 51.7%
+
+[[./img/sig1_layer_nobn.png]]
+
+*** Figure 7 sig=1e-1, with BN, accuracy 52.96%
+
+[[./img/sig1_layer_bn.png]]
+
+*** Figure 8 sig=1e-3, without BN, accuracy 9.82%
+
+[[./img/sig3_layer_nobn.png]]
+
+*** Figure 9 sig=1e-3, with BN, accuracy 53.82%
+
+[[./img/sig3_layer_bn.png]]
+
+*** Figure 10 sig=1e-4, without BN, accuracy 9.82%
+
+[[./img/sig4_layer_nobn.png]]
+
+*** Figure 11 sig=1e-4, with BN, accuracy 52.98%
+
+[[./img/sig4_layer_bn.png]]

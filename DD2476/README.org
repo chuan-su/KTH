@@ -1,0 +1,127 @@
+* Search Engine
+
+** Evaluation
+
+*** 2.3
+
+What is the term frequency of the words food and residence?
+
+| Term      | Doc                       | TF |
+| residence | Davis_Food_Coop.f         |  0 |
+| residence | Resource_Recovery_Drive.f |  1 |
+| food      | Davis_Food_Coop.f         |  1 |
+| food      | Resource_Recovery_Drive.f |  0 |
+
+What are the lengths of these documents (round to 4 decimal places)?
+
+|                     | food residence | Davis_Food_Coop.f | Resource_Recovery_Drive.f |
+| Euclidean, tf       |         1.4142 |            2.0000 |                    2.4495 |
+| Manhattan, tf       |         2.0000 |            4.0000 |                    6.0000 |
+| Euclidean, tf x idf |         2.0217 |            2.0564 |                    4.0234 |
+| Manhattan, tf x idf |         2.7470 |            3.6836 |                    9.3405 |
+
+What is the cosine similarity between the query and the two documents (in the specified spaces using the specified normalization, rounded to 4 decimal places)?
+
+|                     | Davis_Food_Coop.f | Resource_Recovery_Drive.f |
+| Euclidean, tf       |            0.3536 |                    0.2887 |
+| Manhattan, tf       |            0.1250 |                    0.0833 |
+| Euclidean, tf x idf |            0.2296 |                    0.3851 |
+| Manhattan, tf x idf |            0.0943 |                    0.1221 |
+
+What is the cosine similarity (rounded to 4 decimal places) if the query coordinates are considered to be =(1,1)=?
+
+|                     | Davis_Food_Coop.f | Resource_Recovery_Drive.f |
+| Euclidean, tf       |            0.3536 |                    0.2887 |
+| Manhattan, tf       |            0.1250 |                    0.0833 |
+| Euclidean, tf x idf |            0.3360 |                    0.3111 |
+| Manhattan, tf x idf |            0.1326 |                    0.0947 |
+
+*** 2.4
+
+**** Precision
+
+#+BEGIN_SRC python
+import matplotlib.pyplot as plt
+import numpy as np
+
+p = [0.3, 0.2, 0.26666666666666666, 0.3, 0.32] # precison
+plt.plot([10,20,30,40,50],p)
+plt.title("precision")
+plt.show()
+#+END_SRC
+
+#+CAPTION: precision
+#+NAME: fig:result2.png
+
+[[./figs/precision.png]]
+
+**** Recall
+
+#+BEGIN_SRC python
+import matplotlib.pyplot as plt
+import numpy as np
+
+r = [0.03, 0.04, 0.08, 0.12, 0.16] # recall
+plt.plot([10,20,30,40,50],r)
+plt.title("precision")
+plt.show()
+#+END_SRC
+
+#+CAPTION: precision
+#+NAME: fig:result2.png
+
+[[./figs/recall.png]]
+
+
+**** Precison-Recall Graph
+
+#+BEGIN_SRC python
+import matplotlib.pyplot as plt
+import numpy as np
+
+p = [0.3, 0.2, 0.26666666666666666, 0.3, 0.32] # precison
+r = [0.03, 0.04, 0.08, 0.12, 0.16] # recall
+
+decreasing_max_precision = np.maximum.accumulate(p[::-1])[::-1]
+fig, ax = plt.subplots(1, 1)
+ax.hold(True)
+ax.plot(r, p, '--b')
+ax.step(r, decreasing_max_precision, '-r')
+
+fig.show()
+#+END_SRC
+
+ #+CAPTION: precision
+ #+NAME: fig:result2.png
+
+ [[./figs/p-r-graph.png]]
+
+
+** 2.7
+**** Monte Carlo
+
+#+BEGIN_SRC python
+import matplotlib.pyplot as plt
+import numpy as np
+
+runs = [48442,96884,145326,193768,242210,290652,339094,387536,435978,484420,532862,581304,629746,678188,726630,775072,823514,871956,920398,968840]
+
+mc1 = [7.322019610486923e-07, 3.795047446646947e-07, 7.849927882864025e-07, 2.3581458530722055e-07, 2.160383363904784e-07, 2.1709403500678547e-07, 1.5088573816131792e-07, 2.1319852161922223e-07, 1.3834258743517267e-07, 7.90334744230742e-08, 7.835730271067917e-08, 6.270622621979411e-08, 8.670499917050874e-08, 4.541027647418167e-08, 8.845255207911585e-08, 6.240071316677222e-08, 6.680315549363502e-08, 9.032284489498104e-08, 8.415445532538004e-08, 1.4497338331613334e-07]
+mc2 = [1.7654959349514259e-06, 4.795763708414037e-07, 5.646912885617236e-07, 2.887083645412244e-07, 4.937451114641304e-07, 1.5506008774760397e-07, 1.0137485443349946e-07, 3.120942336063407e-07, 9.149068503470514e-08, 2.1594675027081185e-07, 1.4924539221852294e-07, 8.049252719223943e-08, 1.0048649701294491e-07, 6.225321924674286e-08, 2.0501854552455775e-07, 1.0292922370956408e-07, 1.2039563122560085e-07, 7.900295860882633e-08, 5.515217077958807e-08, 5.138299474859387e-08]
+mc4 = [2.73913874355635e-07, 4.6642867107903667e-07, 2.0574517929862314e-07, 1.91648347735106e-07, 9.910785084332584e-08, 1.2105387863336095e-07, 7.408159634293328e-08, 6.75398130132743e-08, 7.0112826539115e-08, 5.729474745756558e-08, 4.911971552219353e-08, 3.888196586703151e-08, 5.310585572877766e-08, 6.490581711705687e-08, 2.72478828421822e-08, 3.7828376909690814e-08, 4.260309411798934e-08, 2.823268809685473e-08, 4.393927508750796e-08, 2.96735122915383e-08]
+mc5 = [7.53181632435043e-07, 3.521595444967492e-07, 2.878022088356127e-07, 1.6870523620234046e-07, 1.0736049683859876e-07, 9.668593034308743e-08, 1.0396959534692254e-07, 7.890941967251222e-08, 9.402572625639114e-08, 9.139034122471525e-08, 5.420043788804559e-08, 3.830548313143645e-08, 5.653758327983225e-08, 5.698389591811132e-08, 4.6469420207713415e-08, 4.933246619221604e-08, 4.2220511695691557e-08, 3.156849400370232e-08, 2.3695474022548567e-08, 3.0223052691591994e-08]
+
+plt.plot(runs, mc1, label="mc1")
+plt.plot(runs, mc2, label="mc2")
+plt.plot(runs, mc4, label="mc4")
+plt.plot(runs, mc5, label="mc5")
+plt.legend()
+
+plt.show()
+
+#+END_SRC
+
+  #+CAPTION: precision
+  #+NAME: fig:result2.png
+
+  [[./figs/Figure_2.png]]

@@ -1,0 +1,25 @@
+* Kafka Docker
+
+** Start zookeeper and 2 kafka brokers
+
+#+begin_src bash
+docker-compose up -d
+docker-compose scale kafka=2
+#+end_src
+
+Read more about [[https://github.com/wurstmeister/kafka-docker/wiki/Connectivity][kafka docker conectivity]]
+
+** Test it out with [[https://github.com/edenhill/kafkacat][kafkacat]]
+
+Relace the =<broker1>= and =<broker2>= in the command below with =host_address:port=,
+e.g. 10.31.129.58:32770,10.31.129.58:32771
+
+- Run =ifconfig -a= to find out host private ip address
+- Run =docker ps= to find out the kafka binding port
+
+#+begin_src bash
+# start publisher
+docker run -it --network=kafka_default edenhill/kafkacat:1.5.0 -b <broker1>,<broker2> -P -t test
+# start consumer
+docker run -it --network=kafka_default edenhill/kafkacat:1.5.0 -b <broker1>,<broker2> -C -t test
+#+end_src

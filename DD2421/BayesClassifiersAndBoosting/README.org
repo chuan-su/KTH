@@ -1,0 +1,118 @@
+* Bayesian Learning and Boosting
+
+Bayesian classifier with maximum likelihood method (ML)
+
+[[file:figures/Figure_1.png]]
+
+** Boundary
+
+=iris= dataset
+
+Final mean classification accuracy =89= with standard deviation =4.16=
+
+[[file:figures/Figure_2.png]]
+
+=vowel= dataset
+
+Final mean classification accuracy =64.7= with standard deviation =4.03=
+
+[[file:figures/Figure_3.png]]
+
+** Boosting
+
+=iris= dataset
+
+Final mean classification accuracy =94.7= with standard deviation =2.82=
+
+[[file:figures/Figure_4.png]]
+
+=vowel= dataset
+
+[[file:figures/Figure_5.png]]
+
+Final mean classification accuracy =80.2= with standard deviation =3.52=
+
+* Assignment 3
+
+#+BEGIN_QUOTE
+When can a feature independence assumption be reasonable and when not?
+#+END_QUOTE
+
+The “Naive’ in NB means that we assume all the features are independent. Actually it is impossible in real life.
+For example, weight is correlated with height, NLP. But it performed well, especially in the case of small-scale samples. However, if there is a strong correlation between each feature,  the naive Bayesian model has a poor classification effect. 
+
+#+BEGIN_QUOTE
+How does the decision boundary look for the Iris dataset?
+How could one improve the classification results for this scenario by changing classifier or, alternatively, manipulating the data?
+#+END_QUOTE
+
+Decision Boundary:
+[[file:figures/Figure_dicision_boundary(NB).png]]
+
+Class 0 is easy to be classified, while class1 and 2 are difficult because they are mixed together and sometimes overlapped. There are many ways to improve.
+Probably random forest and neutral network can solve this problem. We can also use SVM and use kernel function to do a non-linear transform for dataset.
+
+* Assignment 5
+
+#+BEGIN_QUOTE
+Is there any improvement in classification accuracy? Why/why not?
+#+END_QUOTE
+Yes.
+
+For the NB model the accuracy get improved from =89= to =94.7=
+For the Decison tree model the accuracy gets improved from =92.4= to =94.6=
+
+After each time of training, the weight of misclassified sample will be higher, which can help us to make a new model with higher accuracy.
+
+#+BEGIN_QUOTE
+Plot the decision boundary of the boosted classifier on iris and compare it with that of the basic.
+What differences do you notice? Is the boundary of the boosted version more complex?
+#+END_QUOTE
+
+From the figure we can see the boudary becomes more complex comparing to the non-boosted model.
+And the tendency of lean on the left had been removed. Because the adaboost algorithms focus on the mislabeled samples.
+
+Decision Tree Boosted model on =iris= data
+
+Final mean classification accuracy =94.7= with standard deviation =2.82=
+
+[[file:figures/Figure_4.png]]
+
+Basic one:
+
+Final mean classification accuracy =89= with standard deviation =4.16=
+
+[[file:figures/Figure_2.png]]
+
+#+BEGIN_QUOTE
+Can we make up for not using a more advanced model in the basic classifier (e.g. independent features) by using boosting?
+#+END_QUOTE
+
+Yes.
+From previous work, we can find the adaboost is a good way to improve the performance of weak models. Also we can use bagging algorithms.
+
+* Assignment 7
+
+#+BEGIN_QUOTE
+If you had to pick a classifier, naive Bayes or a decision tree or the boosted versions of these, which one would you pick? Motivate from the following criteria:
+#+END_QUOTE
+
+- Outliers
+
+  Naive Bayes. Decision tree and adaboosting are too sensitive to outliers. Decision will be overfitting and adaboosting will put very high weight on outliers.
+
+- Irrelevant inputs: part of the feature space is irrelevant
+
+  Decision or GBDT: The decision tree tend to gain higher information gain and ignore those irrelevant part.
+
+- Predictive power
+
+  Adaboosting with NB or decision tree. Adaboost tend to yield the best performance on prediction.
+
+- Mixed types of data: binary, categorical or continuous features, etc.
+
+  Adaboosting with NB or decision tree. Adaboosting can aggregate many different models. We can choose different models to response different data.
+
+- Scalability: the dimension of the data, D, is large or the number of instances, N, is large, or both.
+
+  Decision tree: NB will under-fitting in high dimensional data set. And adaboosting will spent a long time in training.Boosting is more costy as it generates more interations.

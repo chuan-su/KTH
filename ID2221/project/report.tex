@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+		\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+	
+	\title{Project Report}
+	\author{Harald Ng \\
+		Chuan Su}
+	
+	\maketitle
+In our project, we have implemented friends recommendataion and community detection on given directed graph based on \texttt{Pregel} algorithm. The intermediate result calculated from \texttt{GraphX-Pregel} are sent to \texttt{Kafka}. On the consumer side we used \texttt{spark-stream} to process the messages and write final result to \texttt{Cassandra}.
+\section{Community Detection}
+For the community detection we used clique-based methods. Cliques are subgraphs in which  every node is connected to every node in the clique. In our \texttt{Prege}l approach, each vertex in the graph maintains a \texttt{Map} data structure as its internal state in which the keys are its neighbor Ids and the value is an array of vertex id associated with its neighbors. Thus, each vertex in the graph maintains a state that not only contains its own neighbors but neighbors of its neighbors. 
+On each super step, each vertex sends out a message containing all of its neighbor Ids extracted from its state - \texttt{map.keyset}. Upon receiving incoming messages each vertex will update its state and calculate the cliques it belongs to with \texttt{Bron-Kerbosh} algorithm. Vertices \texttt{vote to halt} when the number of neighbors remains unchanged comparing to previous superstep. 
+
+\section{Kafka, Spark Stream and Cassandra}
+In each super step, the resolved friends recommendation and cliques are published to Kafka broker. On the consumer side \texttt{Spark Stream} was used to process messages based on topics.
+For the community topic, spark stream maintains its state of the cliques count and the clique that has maxium peers.
+
+\section{Dataset}
+The dataset we used describes Twitter followership and can be found under the project directory \texttt{dataset/twitter}.
+\section{Run the program}
+Our program is composed of two parts, one is the \texttt{GraphX Pregel} application acting as message producer to Kafka and the other one is \texttt{Spark Stream} application acting as topic consumer.
+In order to run the program, you need to have \texttt{Spark} installed and \texttt{Kafka} and \texttt{Cassandra} up and running.
+\begin{enumerate}
+\item Run the consumer application
+\begin{verbatim}
+cd sparkstream
+sbt clean package
+sbt run
+// you have to select one of the main class to run
+[1] id2221.CommunityConsumer
+[2] id2221.KafkaSpark
+// press 1 or 2 and then [Enter] to run the application
+\end{verbatim}
+\item Run the producer application
+\begin{verbatim}
+cd sparkstream
+sbt clean package
+
+// start friends recommendation
+spark-submit --class "id2221.FriendRecommend" \
+--master local[4] \
+target/scala-2.11/graphx-pregel_2.11-0.1.jar
+
+// start the community detection
+spark-submit --class "id2221.CommunityDetect" \
+					--master local[4] \
+					target/scala-2.11/graphx-pregel_2.11-0.1.jar
+\end{verbatim}
+\end{enumerate}
+\end{document}

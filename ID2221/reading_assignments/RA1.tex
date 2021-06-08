@@ -1,0 +1,50 @@
+\documentclass[10pt]{proc}
+
+\begin{document}
+
+\large{\textbf{Reading Assignment 1}}\\
+
+\large{\textbf{Authors: Harald Ng, Chuan Su}}\\
+
+\section{Motivation}
+The paper reviewed is \textit{UltraMan: A Unified Platform for Big Trajectory Data Management and Analytics} by Bao et al., 2018.
+
+The motivation for this paper is to provide a unified platform for managing and analyzing big trajectory data. Traditional systems used for these purposes are usually designed for specific needs, which forces users to connect multiple heterogeneous systems making it inefficient.
+
+\section{Contributions}
+The authors of this paper present \textit{UltraMan}, a unified platform that provides scalability, efficiency, persistance and flexibility. The properties of UltraMan are demonstrated through case studies and experimental evaluations in the paper.
+
+\begin{itemize}
+\item \textbf{First contribution}
+  The authors of this paper solved the suboptimal heterogeneous workflows for trajectory data analytics tasks.
+\item \textbf{Second contribution}
+  The authors of this paper solved Spark potential GC (garbarge collector) overhead produced by massive on-heap caching.
+\item \textbf{Third contribution}
+  The authors of this paper solved the unreliable runtime persistence of cached RDD data in spark due to task failures and process cashes.
+\end{itemize}
+
+\section{Solution}
+\begin{itemize}
+	\item \textbf{First solution}
+		The authors of this paper developed a holistic solution and implemented a unified engine based on Spark for trejectory data management and analytics.
+	\item \textbf{Second solution}
+	  	The authors of this paper modified the block manager in Spark and introduced a new storage level based on Chronical Map. Taking advantage of Chonical Map the data is stored in off-heap memory and perssted outside the executors.
+	\item \textbf{Third solution}
+	\textit{UITraMan} first asynchronously backs up the files in shared memory or on disk to a reliable file system (e.g. HDFS) so that the data can survive task failures and node crashes. After that, the parent operator of the lineage of the cached RDD (i.e., a special loader) is able to load the persisted files directly to Chronicle Map. As a result, missing data can be reloaded automatically under Spark's recomputation mechanism.
+\end{itemize}
+
+\section{Strong Points}
+\begin{itemize}
+ \item \textbf{Clear structure and concise text}. The paper has a very clear structure, where each section has purposeful content with a suitable heading. The text is concise and easily read.
+ \item \textbf{Good case studies}. The authors have done well in showing that UltraMan is flexible by including multiple different case studies in chapter 6. Most of the paper is theoretical and aims at explaining how UltraMan works and how it theoretically has greater performance. The case studies supports it with concrete examples.
+ \item \textbf{Clear problem statement and convictive solutions}. The authors gave a very clear explaination of each problem they tried to solve. And the offered solutions always reflected the core of problems and are convictive.
+\end{itemize}
+
+\section{Weak Points}
+\begin{itemize}
+ \item \textbf{Lack of comparison to other system}. The authors does well in presenting experimental data that shows the performance of UltraMan in different real-life use cases. However, it would have been preferred if there was performance comparisons between Ultraman and some other existing system. This would have shown how much performance gain UltraMan actually provides.
+ \item \textbf{Overlook of related work investigation on Spark GC issues} The authors pointed out and offered solution to the potential GC overhead in Spark. However they did not describe existing solutions or investigation made by other researchers.
+ \item \textbf{Overlook of fault tolerance evaluation} The authors overlooked "Runtime Persistence and Fault Tolerance" evaluation of their proposed solution for the reliable distributed storage.
+\end{itemize}
+
+\end{document}

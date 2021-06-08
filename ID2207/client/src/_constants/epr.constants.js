@@ -1,0 +1,8 @@
+export const eprConstants = {
+    EPR_CREATE:  'NEW-EPR_REQUEST',
+    EPR_SUCCESS: 'NEW-EPR_SUCCESS',
+    EPR_FAILURE: 'NEW-EPR_FAILURE',
+    GETMYEPRS_SUCCESS: 'GETEPR_SUCCESS',
+
+
+};

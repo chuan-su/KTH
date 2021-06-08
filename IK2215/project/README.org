@@ -1,0 +1,95 @@
+#+TITLE: ISP Project Internet Services
+#+AUTHOR: Group 5
+#+OPTIONS: toc:nil
+#+LATEX: \setlength\parindent{0pt}
+#+LaTeX_HEADER: \usepackage[left=1in,top=1in,right=1in,bottom=1.5in]{geometry}
+#+LaTeX_HEADER: \usepackage{palatino}
+#+LaTeX_HEADER: \usepackage{fancyhdr}
+#+LaTeX_HEADER: \usepackage{sectsty}
+#+LaTeX_HEADER: \usepackage{engord}
+#+LaTeX_HEADER: \usepackage{cite}
+#+LaTeX_HEADER: \usepackage{graphicx}
+#+LaTeX_HEADER: \usepackage{setspace}
+#+LaTeX_HEADER: \usepackage[center]{caption}
+#+LaTeX_HEADER: \usepackage{multirow}
+#+LaTeX_HEADER: \usepackage{ifthen}
+#+LaTeX_HEADER: \usepackage{longtable}
+#+LaTeX_HEADER: \usepackage{color}
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \usepackage{pdfpages}
+#+LaTeX_HEADER: \usepackage{nomencl}	% For glossary
+#+LaTeX_HEADER: \usepackage{pdflscape}	% For landscape pictures and environment
+#+LaTeX_HEADER: \usepackage{verbatim}   % For multiline comment environments
+#+LaTeX_HEADER: \usepackage[table]{xcolor}
+
+* isp5.lab
+
+** Virtualbox VM Config
+
+*** Host IP Config
+
+First config host /your computer/ and set a static ip address =10.5.5.10= that belongs to the server network =10.5.5.0/24=
+
+The static ip address *has to* be set onto the interface that the ethernet cable connecting to e.g. =en1: Thunderbold 1=.
+
+#+CAPTION: set a static ip address on a mac computer
+[[./img/host.png]]
+
+From the host verify that you can =ping= RTB (/Router B/ =ping 10.5.5.1=.
+
+*** VM IP Config
+
+Before starting your VM on Virtualbox, you need to config VM *Network* to use *Bridged Adpater* and make sure:
+
+  - *attach to* the interface that has ethernet cable connected. e.g. =en1: Thunderbold 1=.
+  - set Promiscuous Mode: Allow All
+
+#+CAPTION: virtualbox network adaptor
+[[./img/vm.png]]
+
+Now start the VM.
+
+1. Install =net-tools= package.
+
+  #+BEGIN_SRC bash
+  sudo apt install net-tools
+  sudo apt install vim # only if you use vim editor
+  #+END_SRC
+
+2. Edit =/etc/network/interfaces=.
+
+  Replace its content with the lines below. This will set a static ip =10.5.5.5= to the VM.
+
+  As a note the interface name e.g. =ens3= must match, you can find the interface name through command =ifconfig=
+
+  #+BEGIN_SRC bash
+  auto lo
+  iface lo inet loopback
+
+  auto ens3
+  iface ens3 inet static
+  address 10.5.5.5
+  netmask 255.255.255.0
+  #+END_SRC
+
+3. Restart =networking= and reboot VM
+
+  #+BEGIN_SRC bash
+  sudo systemctl restart networking
+  reboot
+  #+END_SRC
+
+4. Verify
+
+    - verify that you can =ping= your host from VM. =ping 10.5.5.10=
+    - veriy that you can =ping= the router from VM. =ping 10.5.5.1=
+
+*** Set default gateway to RTB
+
+#+BEGIN_SRC bash
+sudo route set default gateway 10.5.5.1
+route -n
+#+END_SRC
+
+Verify that you can reach client network =ping 10.5.10.1=

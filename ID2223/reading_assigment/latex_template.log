@@ -1,0 +1,151 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.11.3)  14 DEC 2019 20:24
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**latex_template.tex
+(./latex_template.tex
+LaTeX2e <2018-12-01>
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/proc.cls
+Document Class: proc 2014/09/29 v1.3l Standard LaTeX document class
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+))
+(./latex_template.aux)
+\openout1 = `latex_template.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+
+Underfull \hbox (badness 10000) in paragraph at lines 5--6
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--8
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--20
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--20
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--20
+\OT1/cmr/m/n/12 Additionally, the au-thors pro-vided an
+ []
+
+
+Underfull \hbox (badness 5985) in paragraph at lines 15--20
+\OT1/cmr/m/n/12 im-ple-men-ta-tion that sup-ports layer-wise
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 15--20
+\OT1/cmr/m/n/12 par-al-lelism and show that this tech-nique
+ []
+
+
+Underfull \hbox (badness 2469) in paragraph at lines 15--20
+\OT1/cmr/m/n/12 com-mu-ni-ca-tion costs over state-of-the-art
+ []
+
+
+Underfull \hbox (badness 6125) in paragraph at lines 21--22
+[]\OT1/cmr/m/n/12 which out-per-forms state-of-the-art ap-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--29
+
+ []
+
+
+Underfull \hbox (badness 3312) in paragraph at lines 24--29
+\OT1/cmr/m/n/12 The au-thor started by defin-ing a cost
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--29
+
+ []
+
+
+Underfull \hbox (badness 1062) in paragraph at lines 24--29
+\OT1/cmr/m/n/12 In prac-tice in CNNs, each layer is only
+ []
+
+[1
+
+{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 32.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 32.
+
+Underfull \hbox (badness 1590) in paragraph at lines 33--34
+[]\OT1/cmr/bx/n/12 Good re-lated work in-ves-ti-ga-tion\OT1/cmr/m/n/12 .
+ []
+
+
+Underfull \vbox (badness 7397) has occurred while \output is active []
+
+
+Underfull \hbox (badness 1946) in paragraph at lines 44--45
+[]\OT1/cmr/bx/n/12 Not im-ple-mented in main-stream
+ []
+
+[2] (./latex_template.aux) ) 
+Here is how much of TeX's memory you used:
+ 235 strings out of 492616
+ 2821 string characters out of 6129481
+ 69741 words of memory out of 5000000
+ 4232 multiletter control sequences out of 15000+600000
+ 5454 words of font info for 20 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 29i,4n,21p,747b,146s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2019/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmr12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmti12.pfb>
+Output written on latex_template.pdf (2 pages, 65670 bytes).
+PDF statistics:
+ 31 PDF objects out of 1000 (max. 8388607)
+ 21 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

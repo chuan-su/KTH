@@ -1,0 +1,77 @@
+* Router Config
+
+One Router can have more than one interface and each interface has its own unique ipaddress.
+
+#+BEGIN_SRC bash
+$ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes128-cbc student@192.168.0.1 -p 2005
+$ enable # privilige mode
+$ show running-conifg # view current router conifg
+$ conifg terminal
+
+### Interfaces conifg mode
+$ interface gigabitEthernet 0/0
+$ ip address 192.168.22.1 255.255.255.0 # set ip address 192.168.22.1 for RTA gigabitEthernet interface
+$ no shutdown
+$ end # back to privilige mode
+
+$ interface fastEthernet 1/0
+$ ip address 192.168.21.1 255.255.255.0 # set ip address 192.168.21.1 for RTA fastEthernet interface
+$ no shutdown
+$ end # back to privilige mode
+
+## verify
+$ show ip route
+#C    192.168.22.0/24 is directly connected, GigabitEthernet0/0
+#C    192.168.21.0/24 is directly connected, FastEthernet1/0
+#+END_SRC
+
+*Important* use a =cross cable= to connect between routers. Cross cable is only used to connect between routers.
+
+#+BEGIN_SRC bash
+# verify you can ping other router once we have connected router through cross cable
+$ ping 192.168.22.2 # ping RTD router gigabitethernet interface
+$ ping 192.168.23.1 # ping RTD router ethernet interfce, dont think this will work becuase 23 is another subnet than 22
+#+END_SRC
+
+[[./topology.png]]
+
+
+* Conifg VM
+
+One computer can have more than one interface and each interface has its own unique ipaddress.
+
+#+BEGIN_SRC bash
+$ ssh -Y student@192.168.0.21 # table 2 host for 1.
+$ ping 192.168.0.2 # ping DHCP server
+
+# conifg/set current vm eth1 interface ipaddress
+$ sudo ifconifg eth1 192.168.21.2/24 # equielent to: sudo ip addr add 192.168.21.2/24
+$ ifconifg # verify ip is set correctly
+
+# config router with ip: 192.168.21.1 as the default gateway
+# add remember to connect host and router via regular ethernet cable.
+$ sudo route add default gateway 192.168.21.1
+
+# ping another host (this wont work)
+# becuase router RTA is not aware of this subnet 192.168.23.x.
+# router RTA is able to forward packet to subnet 192.168.22.x because it is connected via cross cable.
+$ ping 192.168.23.2
+#+END_SRC
+
+** Add route in RTA router agian
+
+#+BEGIN_SRC bash
+# any packet towards subnet 192.168.23.x should be forward to router with ipaddress: 192.168.22.2
+$ ip route 192.168.23.0 255.255.255.0 192.168.22.2
+
+# now ping the host 192.168.23.2 worked.
+# since router knows that it will forward any packet towards subnet 23 to interface 192.168.22.2 that it already connected via cross cable.
+$ ping 192.168.23.2
+#+END_SRC
+
+Some thoughts:
+
+- One router contains 2 interfaces which connect to 2 different subnets. one interface is input port and the other is output port
+  In this lab. RTA connects subnet 192.168.21.x with subnet 192.168.22.x while RTA connects subnet 192.168.22.x and 192.168.23.x
+  It becomes =192.168.21.x= -> =192.168.22.x= -> =192.168.22.x= -> =192.168.23.x=.
+  Then we just need to tell router which interface to forward packge =ip route <destination_ip> <interface_ip>=.

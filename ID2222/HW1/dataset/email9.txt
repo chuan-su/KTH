@@ -1,0 +1,3 @@
+I work as a recruitment consultant at Collector Bank and I'm currently looking for some really great developers to join their team. They are looking for someone with experience of elasticsearch, and preferably azure and docker as well. They are also looking for a android/iOS developer. Are you happy in your current role or could this be of interest for you?
+
+You can read more about the two roles below (in Swedish though):

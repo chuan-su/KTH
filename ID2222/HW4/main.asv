@@ -1,0 +1,24 @@
+A = [0 1 1 0 0 0;
+     1 0 1 1 0 0
+     1 1 0 0 0 0
+     0 1 0 0 1 1
+     0 0 0 1 0 1
+     0 0 0 1 1 0
+];
+
+E = csvread('example1.dat');
+col1 = E(:,1);
+col2 = E(:,2);
+max_ids = max(max(col1,col2));
+As= sparse(col1, col2, 1, max_ids, max_ids); 
+A = full(As);
+k=3;
+idx = spectralGraphClustering(A,k);
+
+G = graph(A);
+h = plot(G,'Layout','force');
+
+for 
+highlight(h,find(idx==1),'NodeColor','g');
+highlight(h,find(idx==2),'NodeColor','b');
+highlight(h,find(idx==3),'NodeColor','m');

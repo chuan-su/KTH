@@ -1,0 +1,10 @@
+* DHCP Conf
+
+*** Install isc-dhcp-server
+
+#+BEGIN_SRC bash
+sudo apt udpate
+sudo apt install isc-dhcp-server
+#+END_SRC
+
+***

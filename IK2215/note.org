@@ -1,0 +1,62 @@
+* Protocols
+
+- Application Layer
+  BGP, DHCP, DNS, RIP, SMTP, XMPP
+- Transport Layer
+  TCP, UDP, RSVP, DCCP, SCTP
+- Internet layer
+  IP, ICMP, IGMP
+- Link Layer
+  OSPF, ARP
+
+** Rip
+ - RIP uses broadcast UDP data packets to exchange routing information.
+ - RIP message is encapsulated in UDP packet.
+ - RIP Periodic broadcasts of the full routing table to its neighbors.
+ - RIP uses a single routing metric to measure the distance between the source and the destination network.
+ - Each hop in a path from the source to the destination is assigned a hop-count value, which is typically 1. When a device receives a routing update that contains a new or changed destination network entry, the device adds 1 to the metric value indicated in the update and enters the network in the routing table.
+
+[[https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/iproute_rip/configuration/15-mt/irr-15-mt-book/irr-cfg-info-prot.html][RIP Cisco Guide]]
+
+** OSPF
+
+The cost (metric) of an interface in OSPF is an indication of the overhead required to send packets across a certain interface. The cost of an interface is inversely proportional to the bandwidth of that interface. A higher bandwidth indicates a lower cost.
+Directly connected networks will be reached via a metric (cost) of 0 and other networks will be reached according to the cost calculated in the shortest path tree.
+
+OSPF uses flooding to exchange link-state updates between routers. Any change in routing information is flooded to all routers in the network.
+
+*Areas* are introduced to put a boundary on the explosion of link-state updates. Flooding and calculation of the Dijkstra algorithm on a router is limited to changes within an area. All routers within an area have the exact link-state database. Routers that belong to multiple areas, and connect these areas to the backbone area are called *area border routers (ABR)*. ABRs must therefore maintain information describing the *backbone areas* (area 0) and other attached areas.
+
+[[https://www.cisco.com/c/en/us/support/docs/ip/open-shortest-path-first-ospf/7039-1.html][OSPF Cisco Guide]]
+
+
+** BGP
+
+** IGMP
+
+IGMP messages are carried in bare IP packets with IP protocol number =2=. Similar to the Internet Control Message Protocol, there is no transport layer used with IGMP messaging.
+
+** UDP
+
+** TCP
+
+* Mulicast
+
+Class *D* Address
+- First four bits =1110=
+- 224.0.0.0 through 239.255.255.255
+
+** Components
+- Multicast Source
+- Multicast Routers
+  - Multicast Routing Protocol
+- Multicast Clients
+  - Group Management Protocol
+
+- Source - multicast feed
+- Distribution Tree
+- PIM - Protocol Independent Multicast
+  not independ on any underlineing unicast protocols
+  - Dense Mode
+    - Flood and prune
+- IGMP

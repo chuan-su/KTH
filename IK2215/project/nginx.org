@@ -1,0 +1,77 @@
+* Nginx Config
+
+** Install Nginx
+
+#+BEGIN_SRC bash
+sudo apt update
+sudo apt install nginx
+#+END_SRC
+
+*** Verify nginx is running
+#+BEGIN_SRC bash
+service nginx status
+#+END_SRC
+
+Now go to [[http://localhost]] on Firefox in your VM where Nginx is installed.
+
+** Config
+1. Create =/data/www= and =/data/images= directory where static files get served.
+   #+BEGIN_SRC bash
+   sudo mkdir -p /data/www
+   sudo mkdir -p /data/images
+
+   sudo vim /data/www/index.html ## create a sample index.html
+   #+END_SRC
+2. Edit Nginx config file =/etc/nginx/sites-available/default=
+
+   1. Enter =cd /etc/nginx/sites-available=
+   2. Make a backup on existing config file =sudo cp default default_back=
+   3. Run =sudo vim default= and replace its content with lines below
+     #+BEGIN_SRC bash
+     ##
+     # Default server configuration
+     #
+     server {
+             listen 80 default_server;
+             listen [::]:80 default_server;
+
+             root /data/www;
+
+             index index.html;
+
+             server_name isp5.lab www.isp5.lab;
+
+             location / {
+                 root /data/www;
+             }
+
+             location /images/ {
+                 root /data;
+             }
+     }
+     #+END_SRC
+
+3. Restart nginx
+   #+BEGIN_SRC bash
+   sudo systemctl restart nginx
+   #+END_SRC
+
+4. Verify
+   #+BEGIN_SRC bash
+   sudo systemctl status nginx
+   #+END_SRC
+   if =nginx.service= is *inactive*, check the error logs by running command =view /var/log/syslog=.
+   And press =SHIFT + g= to scroll to the bottom of the file.
+   After having fixed the issue, restart bind9 server and very status again.
+
+   Reload firefox at [[http://localhost]]
+
+** Read More
+   - [[http://nginx.org/en/docs/beginners_guide.html][Serving static content in Nginx]]
+   - [[http://nginx.org/en/docs/http/request_processing.html][Config virtual server in Nginx]]
+
+** Common commands
+
+#+BEGIN_SRC
+service nginx help
+#+END_SRC

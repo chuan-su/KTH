@@ -1,0 +1,24 @@
+* Chordy
+
+** Run the test
+
+Construct the ring with 10 chord nodes:
+
+#+BEGIN_SRC erlang
+Pid = test:start(10, nil).
+Pid ! probe % test if the ring is correctly created by passing the probe.
+#+END_SRC
+
+Look up in the Chord DHT.
+
+First adding some random key-value pairs into chord DHT.
+
+#+BEGIN_SRC erlang
+List = test:add_pair(20, Pid).
+#+END_SRC
+
+#+BEGIN_SRC erlang
+{K, V} = lists:nth(1, List). % look up the key-value we inserted before
+
+test:lookup(K, Pid). % perform the the DHT lookup
+#+END_SRC

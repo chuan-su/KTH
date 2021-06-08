@@ -1,0 +1,24 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+apply plugin: 'org.springframework.boot'
+
+springBoot {
+    mainClassName = 'se.sep.app.Application'
+}
+
+bootJar {
+    baseName = 'sep-app'
+    version = '0.0.1-SNAPSHOT'
+}
+
+dependencies {
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile project(':security')
+    compile project(':finance')
+    compile project(':production')
+    compile project(':epr')
+    compile project(':hr')
+}

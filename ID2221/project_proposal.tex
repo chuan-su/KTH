@@ -1,0 +1,58 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{hyperref}
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+ 
+\begin{document}
+
+\title{Project Proposal}
+\author{Harald Ng\\ %replace with your name
+Chuan Su}
+
+\maketitle
+
+\section{Problem Description}
+
+Today social network sites and apps, such as Twitter, LinkedIn, have been becoming part of our dairly lives.
+Recommendation systems of friend, connection and group are becoming the fundamental part of social network systems.
+We believe a great recommendation system is based on user's networking, friendship graph analysis.
+
+In this project we are going to implement a social network analysis tool providing two major functionalities:
+  \begin{itemize}
+\item \textbf{Friend recommendation}
+ Find pairs of user who are not connected but have at least X number connections in common.
+
+\item \textbf{Community detection}
+ Find cliques where the number of outgoing edges is at most one more than the number of nodes in the cliques. For example, if a clique has 3 nodes and there are no more than 4 edges from nodes in this clique to nodes outside, then this clique is defined as a community.
+  \end{itemize}
+\section{Tools}
+The data will be processed \textbf{Spark GraphX} and the results will be stored to \textbf{HDFS}. The \textbf{Scala} programming language will be used for development. If there will be sufficient time, visualizing the results will be implemented as well.
+
+\section{Data}
+We have not decided on the dataset to be used. But we have narrowed down our choices to a graph dataset from \url{http://konect.uni-koblenz.de/networks}. The nodes of the graph represents users and the edges represents friendships in the social network. 
+ 
+\end{document}

@@ -1,0 +1,13 @@
+plugins {
+    id 'net.ltgt.apt' version '0.8'
+}
+
+dependencies {
+    compile project(':common')
+    compile project(':security')
+    compile 'org.mapstruct:mapstruct-jdk8:1.2.0.Final'
+    apt 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:2.+"
+}

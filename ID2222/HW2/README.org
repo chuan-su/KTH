@@ -1,0 +1,16 @@
+* Discovery of Frequent Itemsets and Association Rules
+
+** Run the application
+
+#+BEGIN_SRC bash
+$ cd HW2
+$ sbt package
+$ ./run.sh -k=3 -s=10 -c=80
+#+END_SRC
+
+*** Program arguments
+
+| arg | description                                        | default |
+| -k  | itemset size                                       |       3 |
+| -s  | support threshold                                  |      10 |
+| -c  | confidence threshold for association rules (1-100) |      80 |

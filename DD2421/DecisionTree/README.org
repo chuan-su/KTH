@@ -1,0 +1,235 @@
+* Decision Trees
+
+
+** Assignment 0
+
+Each one of the datasets has properties which makes them hard to learn.
+Motivate which of the three problems is most difficult for a decision tree algorithm to learn.
+
+**** Answer
+Based on the /True concepts/ behind the /Monk/ datasets, the decison tree learned fron /MONK-1/ dataset might look like the tree below.
+
+#+CAPTION: tree figure
+#+NAME: fig:tree.png
+[[./img/tree.png]]
+
+We assume the tree graph for =MONK-3= has greater depth than =MONK-1= but less than =MONK-2=. The =5%= noise in /MONK-3/ datasets might affect classfication accuracy but won't affect decison tree growing.
+
+Therfore we conclude that =MONK-2= is most difficult to build a decison tree while =MONK-1= is considered to be the easiet.
+It is remarkable that fewer splits doest not mean higher accuracy rate. Accuracy rate is depend on the bias and viriance trade off, which will be explained in [[#assignment-6][Assignment 6]] below.
+
+** Assignment 1
+
+The file =dtree.py= defines a function /entropy/ which calculates the entropy of a dataset. Import this file along with the /monks/ datasets and use it to calculate the entropy of the training datasets.
+
+**** Answer
+
+| Dataset |            Entropy |
+| MONK-1  |                1.0 |
+| MONK-2  |  0.957117428264771 |
+| MONK-3  | 0.9998061328047111 |
+
+#+BEGIN_SRC python
+from python.monkdata import monk1, monk2, monk3
+from python.dtree import entropy
+
+entropy(monk1)
+entropy(monk2)
+entropy(monk3)
+#+END_SRC
+
+** Assignment 2
+
+Explain *entropy* for a uniform distribution and a non-uniform distribution, present some example distributions with high and low entropy.
+
+**** Answer
+
+=Entropy= measures unpredictability of a dataset.
+If the dataset is completely uniform-distributed, all the samples in the dataset is labeled with the same category class. Then the entropy of the dataset is =0=.
+While if the dataset is divided into equal number of distributions its entropy is =1=.
+
+#+CAPTION: Entropy figure
+#+NAME: fig:entroy.png
+[[./img/entropy.png]]
+
+- /100 examples, 42 positive/ gives us =entroy = 0.981=
+- /100 examples, 3 postive/ gives us much lower =entroy = 0.194= as the dataset is more homogeneous - =97%= of the samples are labeled with the same class - /negative category/
+
+** Assignment 3
+
+Use the function =averageGain= (defined in =dtree.py=) to calculate the expected /information gain/ corresponding to each of the six attributes.
+Note that the attributes are represented as instances of the class Attribute (defined in =monkdata.py=) which you can access via =m.attributes[0], ..., m.attributes[5]=.
+
+**** Answer
+
+*Information Gain*
+
+| Dataset |                    a1 |                    a2 |                    a3 |                   a4 |                  a5 |                    a6 |
+| MONK-1  |   0.07527255560831925 |  0.005838429962909286 |   0.00470756661729721 |  0.02631169650768228 | 0.28703074971578435 | 0.0007578557158638421 |
+| MONK-2  | 0.0037561773775118823 | 0.0024584986660830532 | 0.0010561477158920196 | 0.015664247292643818 | 0.01727717693791797 |  0.006247622236881467 |
+| MONK-3  |  0.007120868396071844 |   0.29373617350838865 | 0.0008311140445336207 | 0.002891817288654397 | 0.25591172461972755 |  0.007077026074097326 |
+
+#+BEGIN_SRC python
+from python.dtree import entropy, averageGain
+from python.monkdata import monk1, monk2, monk3, attributes
+
+averageGainList = [averageGain(monk1, attr) for attr in attributes]
+
+# result
+dict(zip(attributes, averageGainList))
+
+#+END_SRC
+
+Based on the results, *which attribute should be used for splitting the examples at the root node?*
+
+| MONK1 | a5 |
+| MONK2 | a5 |
+| MONK3 | a2 |
+
+
+** Assignment 4
+
+For splitting we choose the attribute that maximizes the information gain, /Eq.3./
+
+ - Looking at Eq.3 how does the entropy of the subsets, /Sk/, look like when the information gain is maximized?
+ - How can we motivate using the information gain as a heuristic for picking an attribute for splitting?
+
+Think about reduction in entropy after the split and what the entropy implies.
+
+**** Answer
+
+When the information gain is maximized the entropy of each subset (=Sk=) is minimized.
+Decision node (Predictor) in decision tree model is an attribute of the dataset.
+Choosing the decsion node /(the attribute)/ is based on entropy reduction after each split.
+Constructing a decision tree is all about finding the attribute that returns highest information gain.
+
+** Assignment 5
+
+Build the full decision trees for all three Monk datasets using =buildTree=.
+Then, use the function =check= to measure the performance of the decision tree on both the training and test datasets.
+For example to built a tree for =monk1= and compute the performance on the test data you could use
+
+#+BEGIN_SRC python
+import monkdata as m
+import dtree as d
+
+t=d.buildTree(m.monk1, m.attributes);
+print(d.check(t, m.monk1test))
+#+END_SRC
+
+Compute the train and test set errors for the three =Monk= datasets for the full trees.
+*Were your assumptions about the datasets correct? Explain the results you get for the training and test datasets.*
+
+**** Answer
+
+|        | E-train |              E-test |
+| MONK-1 |     0.0 | 0.17129629629629628 |
+| MONK-2 |     0.0 | 0.30787037037037035 |
+| MONK-3 |     0.0 | 0.05555555555555558 |
+
+We assumed =MONK-2= dataset will have the highest error rate which turns out to be right.
+Result above also illustrates that Decison-Tree algorithm has the highest accuracy rate for =MONK-3= dataset.
+
+** Assignment 6
+
+Explain pruning from a bias variance trade-off perspective.
+
+**** Answer
+
+ - A smaller tree with fewer splits might lead to lower variance but higher bias, which might cause underfitting problems
+ - A complex tree might lead to lower bias but higher variance, which might cause overfitting problems.
+
+Tree pruning reduces tree complexity (depth) and aimes to find the optimum /bias variance trade-off/ to minimize prediction/classification error rate.
+
+#+CAPTION: biasvariance figure
+#+NAME: fig: biasvariance.png
+[[./img/biasvariance.png]]
+
+
+** Assignment 7
+
+Evaluate the effect pruning has on the test error for the =monk1= and =monk3= datasets,
+in particular determine the optimal partition into training and pruning by optimizing the parameter =fraction=.
+Plot the classification error on the test sets as a function of the parameter =fraction {- {0.3, 0.4, 0.5, 0.6, 0.7, 0.8}=.
+
+Note that the split of the data is random. We therefore need to compute the statistics over several runs of the split to be able to draw any conclusions. Reasonable statistics includes mean and a measure of the spread. Do remember to print axes labels, legends and data points as you will not pass without them.
+
+**** Answer
+#code
+import random
+import monkdata as m
+import dtree as dt
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+fraction = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+
+def purn(tree, valiset, interPerformence):
+    newtree = tree
+    bestperformence = interPerformence
+    for Tree in dt.allPruned(tree):
+        performance = dt.check(tree, valiset)
+        if performance > bestperformence:
+            bestperformence = performance
+            newtree = Tree
+    return newtree
+
+def partition(data, fraction):
+    ldata = list(data)
+    random.shuffle(ldata)
+    breakPoint = int(len(ldata) * fraction)
+    return ldata[:breakPoint], ldata[breakPoint:]
+
+def error(dataset, fraction):
+    trainset, valiset = partition(dataset, fraction)
+    tree = dt.buildTree(trainset, m.attributes)
+    tree = purn(tree, valiset, dt.check(tree, valiset))
+    error = 1 - dt.check(tree, valiset)
+    return error
+
+def conclusion(dataset, times):
+    d = []
+    for i in range(times):
+        p =[]
+        for f in fraction:
+            p.append(error(dataset, f))
+        d.append(p)
+    df = pd.DataFrame(d, index=range(1, times+1), columns=['0.3', '0.4', '0.5', '0.6', '0.7', '0.8'])
+    df.loc['MEAN'] = np.mean(df)
+    df.loc['VARIENCE'] = np.var(df)
+    return df
+
+def draw(dataframe):
+    df = dataframe
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.set_title('Mean and Varience')
+    plt.xlabel('Fraction')
+    plt.ylabel('Y')
+    ax1 = plt.subplot(121)
+    x = fraction
+    y1 = df.loc['MEAN'].values
+    ax1.scatter(x, y1)
+    ax1.legend('MEAN')
+    y2 = df.loc['VARIENCE'].values
+    ax2 = plt.subplot(122)
+    ax2.plot(x, y2)
+    ax2.legend('VARIENCE')
+    plt.show()
+
+for monk in m.monk1, m.monk3:
+    df = conclusion(monk, 100)
+    draw(df)
+    print(df)
+
+#+CAPTION: The mean and variance of monk1
+#+NAME: fig:monk1.jpg
+[[./img/monk1.jpg]]
+
+
+#+CAPTION: The mean and variance of monk3
+#+NAME: fig:monk3.jpg
+[[./img/monk3]]
+
+

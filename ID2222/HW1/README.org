@@ -1,0 +1,17 @@
+* Finding Similar Items: Textually Similar Documents
+
+** Run the application
+
+#+BEGIN_SRC bash
+$ cd HW1
+$ sbt package
+$ ./run.sh -k=4 -n=100 -b=25 -r=4
+#+END_SRC
+
+*** Program arguments
+
+| arg | desc        | default |
+| -k  | k-shingle   |       4 |
+| -n  | n-signature |     100 |
+| -b  | LSH band    |      25 |
+| -r  | LSH row     |       4 |

@@ -1,0 +1,60 @@
+--
+Query 1: Info about the education in Mathematics on a graduate level
+
+2 results returned:  Private_Tutoring.f and document_translated.f
+
+--
+Query 2: Mathematics graduate
+
+41 results returned.
+
+--
+Query 3: Mathematics graduate level 13
+
+Private_Tutoring.f F
+Mechanical_and_Aeronautical_Engineering.f F
+Economics.f T
+Computer_Science.f T
+What_I_Wish_I_Knew...Before_Coming_to_UC_Davis_Entomology.f F
+Graduate_Groups.f T
+Teaching_Assistants.f F
+UCD_Honors_and_Prizes.f F
+document_translated F
+Statistics.f T
+ECE_Course_Reviews.f F
+Candidate_Statements.f F
+Mathematics.f T
+
+Precison: 5/13 = 0.38
+Recall: 5/100 = 0.05
+
+--
+Query 4: Mathematics M.S program
+
+3 results returned
+
+UCD_Honors_and_Prizes.f F
+Statistics.f T
+Mathematics.f T
+
+Precison: 2/3 = 0.67
+Recall: 2/100 = 0.02
+
+----
+Query 5: graduate level program in Mathematics
+
+10 results returned
+
+Private_Tutoring.f F
+Economics.f T
+Computer_Science.f T
+What_I_Wish_I_Knew...Before_Coming_to_UC_Davis_Entomology.f F
+UCD_Honors_and_Prizes.f F
+document_translated.f F
+Statistics.f T
+ECE_Course_Reviews.f F
+Candidate_Statements.f F
+Mathematics.f T
+
+Precison: 4/10 = 0.4
+Recall: 4/100 = 0.06

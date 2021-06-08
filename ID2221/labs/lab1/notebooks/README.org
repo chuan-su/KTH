@@ -1,0 +1,27 @@
+* Lab 1
+
+** Run Spark Jupyter Notebook in docker container
+
+We use the [[https://github.com/jupyter/docker-stacks/tree/master/all-spark-notebook][all-spark-notebook]] docker image. Run the bash script below to start the docker container.
+
+#+BEGIN_SRC bash
+./docker-run.sh
+#+END_SRC
+
+The server logs appear in the terminal.
+
+And then visit http://127.0.0.1:4567?token=<token> in a browser, where token is the secret token printed in the console.
+Note that we use port =4567= instead of jupyter default =8888=.
+
+Now you should be able to access our 2 notebooks at:
+
+  - [[http://127.0.0.1:4567/notebooks/work/spark.ipynb]]
+  - [[http://127.0.0.1:4567/notebooks/work/sparksql.ipynb]]
+
+To test them out, you need to have the =data= folder provided for this lab placed under this directory.
+
+*** Touble shooting
+
+The default kernal used in spark jupyter notebook is =Apache Toree=, however we strongly recommend to use =spylon-kernel= instead.
+
+You can change the kernel through Jupyter Notebook toolbar:  =Kernal= -> =Change Kernel= -> =spylon-kernel=.

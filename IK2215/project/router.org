@@ -1,0 +1,9 @@
+* Router
+
+#+BEGIN_SRC bash
+# RouterB
+$ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes128-cbc student@192.168.0.1 -p 2010
+# RouterC
+$ ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes128-cbc student@192.168.0.1 -p 2011
+
+#+END_SRC

@@ -1,0 +1,408 @@
+#+TITLE: ISP Project Internet Services
+#+AUTHOR: Group 5
+#+OPTIONS: toc:nil
+#+LATEX: \setlength\parindent{0pt}
+#+LaTeX_HEADER: \usepackage[left=1in,top=1in,right=1in,bottom=1.5in]{geometry}
+#+LaTeX_HEADER: \usepackage{palatino}
+#+LaTeX_HEADER: \usepackage{fancyhdr}
+#+LaTeX_HEADER: \usepackage{sectsty}
+#+LaTeX_HEADER: \usepackage{engord}
+#+LaTeX_HEADER: \usepackage{cite}
+#+LaTeX_HEADER: \usepackage{graphicx}
+#+LaTeX_HEADER: \usepackage{setspace}
+#+LaTeX_HEADER: \usepackage[center]{caption}
+#+LaTeX_HEADER: \usepackage{multirow}
+#+LaTeX_HEADER: \usepackage{ifthen}
+#+LaTeX_HEADER: \usepackage{longtable}
+#+LaTeX_HEADER: \usepackage{color}
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \usepackage{pdfpages}
+#+LaTeX_HEADER: \usepackage{nomencl}	% For glossary
+#+LaTeX_HEADER: \usepackage{pdflscape}	% For landscape pictures and environment
+#+LaTeX_HEADER: \usepackage{verbatim}   % For multiline comment environments
+#+LaTeX_HEADER: \usepackage[table]{xcolor}
+
+* Virtualbox VM Config
+
+** Host IP Config
+
+First config host /your computer/ and set a static ip address =10.5.5.10= that belongs to the server network =10.5.5.0/24=
+
+The static ip address *has to* be set onto the interface that the ethernet cable connecting to e.g. =en1: Thunderbold 1=.
+
+#+CAPTION: set a static ip address on a mac computer
+[[./img/host.png]]
+
+From the host verify that you can =ping= RTB (/Router B/ =ping 10.5.5.1=.
+
+** VM IP Config
+
+Before starting your VM on Virtualbox, you need to config VM *Network* to use *Bridged Adpater* and make sure:
+
+  - *attach to* the interface that has ethernet cable connected. e.g. =en1: Thunderbold 1=.
+  - set Promiscuous Mode: Allow All
+
+#+CAPTION: virtualbox network adaptor
+[[./img/vm.png]]
+
+Now start the VM.
+
+1. Install =net-tools= package.
+
+  #+BEGIN_SRC bash
+  sudo apt install net-tools
+  sudo apt install vim # only if you use vim editor
+  #+END_SRC
+
+2. Edit =/etc/network/interfaces=.
+
+  Replace its content with the lines below. This will set a static ip =10.5.5.5= to the VM.
+
+  As a note the interface name e.g. =ens3= must match, you can find the interface name through command =ifconfig=
+
+  #+BEGIN_SRC bash
+  auto lo
+  iface lo inet loopback
+
+  auto ens3
+  iface ens3 inet static
+  address 10.5.5.5
+  netmask 255.255.255.0
+  #+END_SRC
+
+3. Restart =networking= and reboot VM
+
+  #+BEGIN_SRC bash
+  sudo systemctl restart networking
+  reboot
+  #+END_SRC
+
+4. Verify
+
+    - verify that you can =ping= your host from VM. =ping 10.5.5.10=
+    - veriy that you can =ping= the router from VM. =ping 10.5.5.1=
+
+** Set default gateway to RTB
+
+#+BEGIN_SRC bash
+sudo route set default gateway 10.5.5.1
+route -n
+#+END_SRC
+
+Verify that you can reach client network =ping 10.5.10.1=
+
+* DHCP config
+
+** Install isc-dhcp-server
+
+#+BEGIN_SRC bash
+sudo apt update
+sudo apt install isc-dhcp-server
+#+END_SRC
+
+** Config interface that dhcp server listens on
+
+ 1. Run command =ifconfig= and take note of the interface name that has ip address =10.5.5.5=, e.g. =enp0s3=
+ 2. Edit =/etc/default/isc-dhcp-server= file to set the interface name.
+   #+BEGIN_SRC bash
+    INTERFACESv4="enp0s3"
+    INTERFACESv6=""
+   #+END_SRC
+
+** Config dhcp server
+
+1. Edit the main dhcp configuration file =/etc/dhcp/dhcpd.conf= and add the lines below:
+
+  #+BEGIN_SRC bash
+  option domain-name "isp5.lab";
+  option domain-name-servers 10.5.5.5;
+
+  default-lease-time 600;
+  max-lease-time 7200;
+
+  ddns-update-style none;
+
+  authoritative;
+
+  ## config the subnet for server network
+  subnet 10.5.5.0 netmask 255.255.255.0 {
+    range 10.5.5.100 10.5.5.200
+    option domain-name-servers 10.5.5.5;
+    option domain-name "isp5.lab";
+    option subnet-mask 255.255.255.0;
+    option routers 10.5.5.1;
+    option broadcast-address 10.5.5.255;
+    default-lease-time 600;
+    max-lease-time 7200;
+  }
+
+  ## config the subnet for client network
+  subnet 10.5.10.0 netmask 255.255.255.0 {
+    range 10.5.10.100 10.5.10.200
+    option domain-name-servers 10.5.5.5;
+    option domain-name "isp5.lab";
+    option subnet-mask 255.255.255.0;
+    option routers 10.5.10.1;
+    option broadcast-address 10.5.10.255;
+    default-lease-time 600;
+    max-lease-time 7200;
+  }
+  #+END_SRC
+
+2. Start dhcp server
+  #+BEGIN_SRC bash
+   sudo systemctl start isc-dhcp-server
+   # or
+   sudo server isc-dhcp-server start
+  #+END_SRC
+
+3. Verify dhcp server status
+  #+BEGIN_SRC bash
+   sudo systemctl status isc-dhcp-server
+  #+END_SRC
+
+*** Troublshooting
+
+if server status is not *active*, check the error logs by running command =view /var/log/syslog=.
+And press =SHIFT + g= to scroll to the bottom of the file.
+
+After having fixed the issue, restart dhcp server and verify status again.
+
+** Install DHCP Relay on Router C
+
+#+BEGIN_SRC bash
+enable
+config terminal
+interface Gi 0/1
+
+ip address-helper 10.5.5.5
+do wr
+#+END_SRC
+
+** Verify
+
+Once the DHCP server is up and running and DHCP relay is installed on Router C,
+you can connect another computer to the client network and run the following command to verify.
+
+#+BEGIN_SRC bash
+sudo route add default gateway 10.5.10.1
+sudo dhclient eth1
+ifconfig # check if you got ip address between 10.5.10.100 and 10.5.10.200 on interface eth1.
+#+END_SRC
+
+=eth1= needs to be replaced with the actual client interface name.
+
+
+* Bind9 DNS Config
+
+** Install bind9, bin9utils
+
+#+BEGIN_SRC bash
+sudo apt update
+sudo apt install bind9 bin9utils
+#+END_SRC
+
+** Edit =/etc/bind/named.conf.local= file.
+
+=sudo vim /etc/bind/named.conf.local= and add zones configuration:
+
+#+BEGIN_SRC bash
+   zone "isp5.lab" { type master; file "/etc/bind/db.isp5.lab"; };
+   zone "5.5.10.in-addr.arpa" { type master; file "/etc/bind/db.10.5.5"; };
+#+END_SRC
+
+Run the command =sudo named-checkconf -z /etc/bind/named.conf= to validate.
+
+** Create a file at =/etc/bind/db.isp5.lab=
+
+First copy =/etc/bind/db.local/=:
+
+#+BEGIN_SRC bash
+sudo cp /etc/bin/db.local /etc/bind/db.isp5.lab
+#+END_SRC
+
+First replace the settings that has  =localhost.=, =root.localhost.= to =isp5.lab=, =root.isp5.lab.=
+
+- *DO NOT forget* the 'dot'/'.' in the end
+- *MUST increament the serial number:* =2     ; Serial=, every time you make changes this file
+
+| @ | IN | SOA | localhost. | root.localhost. |
+Change to
+| @ | IN | SOA | isp5.lab. | root.isp5.lab. |
+
+Then update the settings:
+
+| @       | IN | NS    | ns.isp5.lab |
+| @       | IN | A     |    10.5.5.5 |
+| ns      | IN | A     |    10.5.5.5 |
+| dhcpd   | IN | CNAME |          ns |
+| www     | IN | CNAME |          ns |
+| client1 | IN | A     | 10.5.10.100 |
+| client2 | IN | A     | 10.5.10.101 |
+
+Run the command =sudo named-checkzone forward /etc/bind/db.isp5.lab= to validate.
+
+** Create a file at =/etc/bind/db.10.5.5=
+
+First copy =/etc/bind/db.isp5.lab=
+
+#+BEGIN_SRC bash
+sudo cp /etc/bind/db.isp5.lab /etc/bind/db.10.5.5
+#+END_SRC
+
+And update the settings:
+
+|   @ | IN | NS  | ns.isp5.lab.      |
+|   5 | IN | PTR | ns.isp5.lab.      |
+| 100 | IN | PTR | client1.isp5.lab. |
+| 101 | IN | PTR | client2.isp5.lab. |
+
+*The serial number in the reverse zone needs to be incremented on each changes as well*
+
+Run the command =sudo named-checkzone reverse /etc/bind/db.10.5.5= to validate.
+
+** Start bind9
+
+Start =bind9= service
+#+BEGIN_SRC bash
+sudo chown -R bind:bind /etc/bind
+sudo chmod -R 755 /etc/bind
+
+sudo systemctl start bind9
+#+END_SRC
+
+** Check status
+Check =bind9= service status
+#+BEGIN_SRC bash
+sudo systemctl status bind9
+#+END_SRC
+
+*** Troubleshooting
+if server status is not *active*, check the error logs by running command =view /var/log/syslog=.
+And press =SHIFT + g= to scroll to the bottom of the file.
+
+After having fixed the issue, restart bind9 server and very status again.
+
+** Config =/etc/network/interfaces= file
+
+1. Edit =/etc/network/interfaces= file and add the lines below
+
+  #+BEGIN_SRC bash
+  dns-search isp5.lab
+  dns-nameserver 10.5.5.5
+  #+END_SRC
+
+2. Restart networking device:
+
+  #+BEGIN_SRC bash
+  sudo systemctl restart networking
+  #+END_SRC
+
+** Config =/etc/resolv.conf= file
+
+1. Edit =/etc/resolv.conf= file and add the lines below
+
+  #+BEGIN_SRC bash
+  nameserver 10.5.5.5
+  search isp5.lab
+  #+END_SRC
+
+2. Restart networking and NetworkManager
+  #+BEGIN_SRC bash
+  sudo systemctl restart networking
+  sudo systemctl restart NetWorkManager
+
+  ## Maybe restart bind9?
+  sudo systemctl restart bind9
+ #+END_SRC
+
+** Verify with =ping= and =nslookup=
+
+#+BEGIN_SRC
+ping ns
+ping client1
+
+nslookup ns
+nslookup client1
+#+END_SRC
+
+
+** client side
+
+*NOTE* The following configuration should be auto fixed when client receives an ip address from DHCP server
+
+1. Edit /etc/network/interfaces
+   =sudo vim /etc/network/interfaces= and add the following lines:
+
+  #+BEGIN_SRC bash
+  dns-search isp5.lab
+  dns-nameserver 10.5.5.5
+  #+END_SRC
+
+2. Edit /etc/resolv.conf
+  =sudo vim /etc/resolv.conf= and add the followling lines:
+
+  #+BEGIN_SRC bash
+  nameserver 10.5.5.5
+  search 10.5.5.5
+  #+END_SRC
+
+3. Restart netwoking and NetworkManager
+
+  #+BEGIN_SRC bash
+  sudo systemctl restart networking
+  sudo systemctl restart NetWorkManager
+
+  ping 10.5.5.5
+  #+END_SRC
+
+
+* Nginx Config
+
+** Install Nginx
+
+#+BEGIN_SRC bash
+sudo apt install nginx
+#+END_SRC
+
+*** Verify nginx is running
+#+BEGIN_SRC bash
+service nginx status
+#+END_SRC
+
+Now go to [[http://localhost:80]] on Firefox in your VM where Nginx is installed.
+
+** Config
+
+1. Run =less /etc/nginx/sites-available/default= to check where =index.html= is located.
+   And Press =q= to exit.
+  #+BEGIN_SRC bash
+   server {
+     listen 80 default_server;
+     ....
+     root /var/www/html
+     index index.html index.htm, index.nginx-debian.html.back
+   }
+  #+END_SRC
+
+2. Run the commands below to create a new file =index.html=
+
+#+BEGIN_SRC bash
+sudo cp /var/www/html/index.nginx-debian.html /var/www/htm/index.nginx-debian.html.back
+sudo mv /var/www/htm/index.nginx-debian.html /var/www/html/index.html
+#+END_SRC
+
+3. Edit =index.html= file
+
+  #+BEGIN_SRC bash
+  sudo vim /var/www/html/index.html
+  #+END_SRC
+
+4. Refresh firefox at [[http://localhost:80]]
+
+** Common commands
+
+#+BEGIN_SRC
+service nginx help
+#+END_SRC

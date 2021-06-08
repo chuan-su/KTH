@@ -1,0 +1,79 @@
+#+TITLE:  ID2221 HT19-1 Data Intensive Computing RQ1
+#+AUTHOR: Chuan Su <chuans@kth.se>; Harald Ng <hng@kth.se>
+#+OPTIONS: toc:nil
+#+LATEX: \setlength\parindent{0pt}
+#+LaTeX_HEADER: \usepackage[left=1in,top=1in,right=1in,bottom=1.5in]{geometry}
+#+LaTeX_HEADER: \usepackage{palatino}
+#+LaTeX_HEADER: \usepackage{fancyhdr}
+#+LaTeX_HEADER: \usepackage{sectsty}
+#+LaTeX_HEADER: \usepackage{engord}
+#+LaTeX_HEADER: \usepackage{cite}
+#+LaTeX_HEADER: \usepackage{graphicx}
+#+LaTeX_HEADER: \usepackage{setspace}
+#+LaTeX_HEADER: \usepackage[compact]{titlesec}
+#+LaTeX_HEADER: \usepackage[center]{caption}
+#+LaTeX_HEADER: \usepackage{multirow}
+#+LaTeX_HEADER: \usepackage{ifthen}
+#+LaTeX_HEADER: \usepackage{longtable}
+#+LaTeX_HEADER: \usepackage{color}
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \usepackage{pdfpages}
+#+LaTeX_HEADER: \usepackage{nomencl}	% For glossary
+#+LaTeX_HEADER: \usepackage{pdflscape}	% For landscape pictures and environment
+#+LaTeX_HEADER: \usepackage{verbatim}   % For multiline comment environments
+#+LaTeX_HEADER: \usepackage[table]{xcolor}
+
+*** Explain how a file region can be left in an inconsistent state in GFS?
+
+The state of a file region depends on the type of data mutation, whether
+it succeeds or fails or there are concurrent mutations.
+A file region can be left in a inconsistent state if data mutation (write or record appends) is failed.
+
+ - if a /record append/ fails at any replica, the chunk at the replicas may contain different data, such as paddings inserted by GFS or duplicated of the record in whole or in part. They occupy regions considered to be inconsistent.
+
+*** Briefly explain how HopsFS uses User Defined Partitioning (UDP) and Distributed Aware Transaction (DAT) to improve the system performance (e.g., CPU usage, network traffic and latency)?
+
+UDP allows data to be partitioned based on a user-specified table column. This provides greater control over how the data is distributed among different database partitions.
+
+DAT allows to have a transaction hint at the start of the transaction. This gives the transaction a transaction coordinator on the database node that holds all the required data for the transaction. This reduces the latency of the database operation.
+
+*** Show with an example that in the CAP theorem, we can have only two properties out of Consistency, Availability, and Partition Tolerance at the same time.
+
+A simple example is that we have 2 replicas - /replica A/ and /replica B/ and one client.
+The client is able to read and write to any of these two replicas.
+
+To achieve consistency, the value written to one replica is replicated to another.
+
+Howerver in the case of network partitioning, /replica A/ cannot replicate the data written by the client to /replica B/.
+In result, client would read a stale value (that is not last written value) from /replica B/, which lead to inconsistency
+but supports *Availability* and *Partition Tolerance*.
+
+Another real-life example is that /Cassandra/ gives up consistency in favor of availability and partition tolerance.
+
+*** How does BigTable provide strong consistency?
+
+/BigTable/ provides strong consistency by having only one tablet server for a given piece of data, which is a trade-off with availability:
+
+  - if a tablet server fails, its portion of data is temporarily unavailable until a new server is assigned.
+
+Futhermore /BigTable/ supports single-row transactions to perform atomic read-modify-write sequences on data stored under a single row key.
+Every read or write in a row of a tablet is atomic.
+
+*** Write a simple query in Cypher for each of the following requests:
+
+ - Match a Person called /John Doe/
+   #+BEGIN_SRC Cypher
+   MATCH(n:Person {name: 'John Doe'})
+   return n;
+   #+END_SRC
+ - Find FRIENDS OF /John Doe/
+   #+BEGIN_SRC Cypher
+   MATCH(:Person {name: 'John Doe'}) - [:FRIENDS] -> (p:Person)
+   return p;
+   #+END_SRC
+ - Count /John Doe/'s direct acquaintances
+   #+BEGIN_SRC Cypher
+   MATCH(n:Person {name: 'John Doe'}) --> (x)
+   return count(*);
+   #+END_SRC

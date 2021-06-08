@@ -1,0 +1,138 @@
+* Assignment 4
+
+** Gradient Checks
+
+To verify our anylytic gradient computations are correct, we applied the [[http://cs231n.github.io/neural-networks-3/][relative error comparison]] approach that comparing
+the numerical gradient and analytic gradient and verified that the relative error is below =1e-6=.
+
+We performed gradients check on our =RNN= model for the gradients =dW,dU,dV,db= and =dc=.
+
+For details of our gradients check procedure, please refer to [[https://gits-15.sys.kth.se/chuans/DL/blob/master/assignment4/gradients_check.py][gradients_check.py source code]]
+
+** Smooth Loss
+
+- We trained our =RNN= network with =20= epochs and achieved smooth loss =39.993612643405= starting from iteration =434000= at epoch =10=.
+- We have actually achieved smooth loss =40.999018771318475= from iteration =300700= at epoch =6=.
+
+[[./img/fig.png]]
+
+
+** Synthesized Text
+
+iter=0 epoch=0 n=200
+iter=0 epoch=0 smooth_loss=109.55066070221919
+#+BEGIN_SRC txt
+jY30TsT^(2dnkqUxU_(W?ŸXuBKzPqDQ.3!pdf"vŸnWQ  j^x7uŸE'h       a6h)IjtLAQ_"F4.apODz¥Tc3!R?j_e¥9nL(?AZzeAmztn4Cs_I?cW9fNhp-/23ihaD_Fpod
+,j0cHTeA3^nVFLxQSGH-4   w¥YHD}se;!9Ald}^SEKVRXmlD7      m       er      96R6o'g}/)zxnJK1)oW,
+#+END_SRC
+
+iter=10000 epoch=0 n=200, smooth_loss=53.14895033408549
+
+#+BEGIN_SRC txt
+aver spAaidid gors; said Mragrhond arm. and stang whelf brs yo  Mrs in Harry, Frarkorkirgear hadr, warmlr iret ar o frmed lurmirid
+ the Dlrror said brongElyburk co rousl wamring to lnorre oog dokly?
+#+END_SRC"
+
+iter=20000 epoch=0 smooth_loss=49.465356864022134
+#+BEGIN_SRC txt
+yf en the a sighting erelt bf stisurtKor sunint yir Her int. Thk hislubr.  Yo mediS.  "The by a gith wark of he koofnt in he pore h
+awn you tow, us iot no fil., It witham -".
+"
+"Yeate
+ arwow flists of
+#+END_SRC
+iter=20000 epoch=0 n=200, text=
+
+iter=30000 epoch=0 smooth_loss=48.00568071044259
+#+BEGIN_SRC txt
+lisely hem the to tem the gorthat blongia lnakelly wertly quattound lewel frasest pitcor he wast overy faryish Claly and his his wa
+le lootars looked seart wath thempon to mesar was hark.  KPanyord od
+#+END_SRC
+
+iter=40000 epoch=0 smooth_loss=46.73346786488145
+#+BEGIN_SRC txt
+hele of Harry shoided that belircing he was shlit.  Heving elfrainf.
+"We'slmbefe, dafinef. . . . Dumghing were, sord to kicabled Profes broateredring for the was sice.
+Vonnttleted corbed frolingrould,
+#+END_SRC
+
+iter=50000 epoch=1 smooth_loss=45.696882851775655
+#+BEGIN_SRC txt
+e dight it a cometild the cered now Mand whe sluwn scist on beem theik about backing the umgeming dive?  Nos reowinss; af there wot
+ of Cabblunt wo had out ot.  The watter."
+"Bo ens an and begetore aby
+#+END_SRC
+
+iter=60000 epoch=1 smooth_loss=46.251321919141525
+#+BEGIN_SRC txt
+hay," on therming on Th them hast.
+"Affere. . . thon' damkid, Ron, all Charck it flaint.
+"Mr. Crobyed, to camears stmone at they the car, as warted a did land thro his out starsed Wiketed," said and b
+#+END_SRC
+
+iter=70000 epoch=1 smooth_loss=45.30345468608231
+#+BEGIN_SRC
+ and shicked got you see the encing, he had hes Main it sormik low blearbe fin the fan't had's feea fidtun't chaibed.  " Wo -"I'
+"  Harry an.
+Harry dere into erten.
+"Whauman's sure arawaye was fice it
+#+END_SRC
+
+iter=80000 epoch=1 smooth_loss=45.35285778937262
+#+BEGIN_SRC txt
+ught at twes his only meangare brook, in with eaciuge all tee voach flulvers.  He ner the disnt, and stape.
+. . grinch.  Herry, bulned mor be him he wa down he wap to nommshize trremage.  It of brom.
+#+END_SRC
+
+iter=90000 epoch=1 smooth_loss=44.4329936094291
+#+BEGIN_SRC txt
+ime to of shisk and demermed tholk'y anl the bredded though Digghing an own hild as they're thong - Thermione a ground him, his res
+s strometo a of them, Quiddeys Voldging then knitht of thy being up w
+#+END_SRC
+
+iter=100000 epoch=2 smooth_loss=43.55180146933424
+
+#+BEGIN_SRC txt txt
+e must and George wondy, whely forroup diglled he dhen - see then't you the for.  Ne.  The bleesed and Goymore not he her gext't H
+arly?"
+"Not come with soreforran't wrye care you," said Gookely, the G
+#+END_SRC
+
+iter=110000 epoch=2 smooth_loss=44.66174387364283
+#+BEGIN_SRC txt
+edringly disntereing.in sar now and Harry at nown?"  said Diwllling so edustly endleything at the liply, who kercisee whele an Chr
+ow shoulds. . . . . . lize for in. "Werry?" - wingling worch fieding a
+#+END_SRC
+
+iter=120000 epoch=2 smooth_loss=43.91572492953971
+#+BEGIN_SRC txt
+y the Not alven belly, SnaqSwake?"
+She griwlys found res, and the futner.
+                The Serte ofurg. . . Hermione simetive sim.  as it's it down see fine," said Heaxied windot ontored been - was see wa kned h
+#+END_SRC
+
+iter=130000 epoch=2 smooth_loss=44.3346947894169
+#+BEGIN_SRC txt
+onvly chatle swoplven was cramoog he wan evartace oace the intingly gigganed in him, and you ball . . . . .'shing firture, so . su
+ar, bud Ceeple Dartsowe drin-malfer, you grow whele!  He of deeng.
+Thi
+#+END_SRC
+
+** Sythesized Text From best model
+
+Our best result achieved is with smooth loss =38.848513566566815= at iteration =878100=.
+
+And the sythesized text is as below:
+
+#+BEGIN_SRC txt
+Harry sepretions's going ees"
+Fitto moved proed wered.
+"Ahing."
+"Cun?" hand on it gropling of me kinnew voice wizards whickly ....."
+"Masaminy," sald moved on all.  I cilling and they gold.  "Behy a mindy thead; Muggllaling was ara-doneling Profesarion.  Harry down't Hermione in it sidne, room the dood them sid hive hall of him.  It's innogefur?" 'all.  He had amcining, something the only.  Nevillione you said rinal, thim her to gioking, beem think exe did everyas indell, will legs them out Dibly," said Ron what from the toor his nothing didn't likils. "Mr.."
+"Herwive Dulanteds as Dobby living?"  said Ron.
+ "He had stloirmunce whitker looking out the might? Woneds are propler.  "Her, sew it to all.
+Harry make and helwick the smile of they with Graz alon Ron," Harry wasts to puaksers Madame nose.
+"Thas, as you gain to Digg. K'Lion .". . . "Harry.  Dumblowed," said Harry hooding hadn't my starthing to grish, pudg's meete with voice agair to two duyie.  The emfrobber't ingo eigas.
+"He's
+#+END_SRC

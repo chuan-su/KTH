@@ -1,0 +1,21 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+out
+
+# Ignore ide
+.idea
+
+# Ignore davisWiki dataset
+davisWiki
+
+# Ignore guardian dataset
+guardian
+
+# generated file
+tokenized_result.txt
+index/data
+index/dictionary
+index/docInfo

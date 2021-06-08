@@ -1,0 +1,71 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{listings}% http://ctan.org/pkg/listings
+\usepackage{alltt}
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+
+\begin{document}
+
+\title{Review Questions 6}
+\author{Harald Ng \\
+        Chuan Su}
+
+\maketitle
+\begin{enumerate}
+    \item 
+   	The reason is to improve work balance and ensure that the edges are uniformly distributed over machines.
+    \item Total resources: \(\langle28CPU, 56GB\rangle\) \\
+	User1 wants: \(\langle1CPU, 2GB\rangle\); Dominant resource: Both (1/28 = 2/56) \\
+	User2 wants: \(\langle1CPU, 4GB\rangle\); Dominant resource: RAM (1/28 \textless 4/56) \\
+	Using dominant Resource Fairness, we should give every user an equal share of its dominant resource.
+	\begin{alltt}
+	    Maximize Allocation:    max(x,y)        
+    CPU Constraint:         x+y \leq\ 28        
+    Memory Constraint:      2x + 4y \leq 56 
+    Equalize dominant shares:
+    \dfrac{x}{28} = \dfrac{4y}{56} \leftrightarrow \dfrac{x}{28} = \dfrac{y}{14} \leftrightarrow x = 2y
+	\end{alltt}
+	 Put x = 2y into the two other equations and we will get \underline{x = 14} and \underline{y = 7}. This corresponds to User1 getting \(\langle50\% CPU, 50\%GB\rangle\) and User2 getting \(\langle25\% CPU, 50\%GB\rangle\). As we can see, both users get an equal share of the RAM (dominant resource for both user1 and user2).
+	 \\
+	 Using Asset fairness, we should give weights to resources. In this case we can see that 1 CPU = 2GB. This yields:
+	 	\begin{alltt}
+	    Maximize Allocation:    max(x,y)        
+    CPU Constraint:         x+y \leq\ 28        
+    Memory Constraint:      2x + 4y \leq 56 
+    Asset fairness:         User1: \(\langle1CPU, 2GB\rangle\) = 1CPU + 1CPU = 2x
+                            User2: \(\langle1CPU, 4GB\rangle\) = 1CPU + 2CPU = 3y
+                            \rightarrow 2x = 3y
+	\end{alltt}
+	Which gives a solution of \underline{x = 12} and \underline{y = 8}. This corresponds to User1 getting \(\langle43\% CPU, 43\%GB\rangle\) and User2 getting \(\langle29\% CPU, 57\%GB\rangle\). As we can see, both users get a sum of 86\% resources.
+	
+	
+
+
+
+
+
+
+\end{enumerate}
+
+
+\end{document}

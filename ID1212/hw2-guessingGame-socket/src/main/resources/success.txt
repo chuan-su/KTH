@@ -1,0 +1,8 @@
+<html>
+    <body>
+        <p>you made it in {times} guess(es). Press button to retry</p>
+         <form action="/" method="get">
+              <input type="submit" value="New Game" />
+        </form>
+    </body>
+</html>
